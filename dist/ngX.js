@@ -1,4 +1,4 @@
-angular.module("ngX", []);
+angular.module("ngX", ["ngRoute"]);
 
 //# sourceMappingURL=ngX.module.js.map
 

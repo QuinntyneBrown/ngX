@@ -1,1 +1,1 @@
-﻿angular.module("ngX", []); 
+﻿angular.module("ngX", ["ngRoute"]); 

@@ -1,4 +1,4 @@
-angular.module("basicApp", ["ngRoute", "ngX"]).config([
+angular.module("basicApp", ["ngX"]).config([
     "$routeProvider",
     function ($routeProvider) {
         $routeProvider.when("/", {
@@ -10,6 +10,13 @@ angular.module("basicApp", ["ngRoute", "ngX"]).config([
 var HomeComponent = (function () {
     function HomeComponent() {
     }
+    Object.defineProperty(HomeComponent.prototype, "greeting", {
+        get: function () {
+            return "ngX";
+        },
+        enumerable: true,
+        configurable: true
+    });
     return HomeComponent;
 })();
 ngX.Component({

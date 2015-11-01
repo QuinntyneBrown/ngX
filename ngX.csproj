@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dist\ngX.js" />
+    <Content Include="dist\ngX.min.js" />
     <Content Include="examples\basic\home.component.html" />
     <Content Include="examples\basic\index.html" />
     <Content Include="examples\basic\index.js" />
