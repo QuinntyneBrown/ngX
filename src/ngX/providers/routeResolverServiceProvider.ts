@@ -18,6 +18,10 @@
                     var deferred = $q.defer();
                     var resolvedRouteData: any = {};
                     var routePromises = this.getRoutePromisesByRouteName(routeName);
+
+                    if (routePromises.length < 1)
+                        return $q.when(true);
+
                     var prioritizedGroups = this.reduceRoutePromisesByPriority(routePromises);
 
                     this.invoke($injector, $q, prioritizedGroups, 0, () => {

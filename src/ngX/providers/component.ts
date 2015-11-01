@@ -40,17 +40,18 @@
             angular.module(options.module)
                 .controller(options.componentName, options.component);
 
-            angular.module(options.module)
-                .config([
-                    "routeResolverServiceProvider", (routeResolverServiceProvider: IRouteResolverServiceProvider) => {
-                        routeResolverServiceProvider.configure({
-                            route: options.route,
-                            routes: options.routes,
-                            key: options.key,
-                            promise: options.component.canActivate()
-                        });
-                    }
-                ]);
+            if (options.component.canActivate)
+                angular.module(options.module)
+                    .config([
+                        "routeResolverServiceProvider", (routeResolverServiceProvider: IRouteResolverServiceProvider) => {
+                            routeResolverServiceProvider.configure({
+                                route: options.route,
+                                routes: options.routes,
+                                key: options.key,
+                                promise: options.component.canActivate()
+                            });
+                        }
+                    ]);
         }
     }
 

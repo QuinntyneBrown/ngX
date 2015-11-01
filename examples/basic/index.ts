@@ -10,12 +10,6 @@
 
 class HomeComponent {
     
-    public static canActivate = () => {
-        return [
-            "$q", ($q:ng.IQService) => {
-            return $q.when(true);
-        }];
-    }
 }
 
 ngX.Component({

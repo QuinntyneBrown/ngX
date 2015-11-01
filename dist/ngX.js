@@ -35,17 +35,18 @@ var ngX;
             options.component.$inject = options.providers;
             angular.module(options.module)
                 .controller(options.componentName, options.component);
-            angular.module(options.module)
-                .config([
-                "routeResolverServiceProvider", function (routeResolverServiceProvider) {
-                    routeResolverServiceProvider.configure({
-                        route: options.route,
-                        routes: options.routes,
-                        key: options.key,
-                        promise: options.component.canActivate()
-                    });
-                }
-            ]);
+            if (options.component.canActivate)
+                angular.module(options.module)
+                    .config([
+                    "routeResolverServiceProvider", function (routeResolverServiceProvider) {
+                        routeResolverServiceProvider.configure({
+                            route: options.route,
+                            routes: options.routes,
+                            key: options.key,
+                            promise: options.component.canActivate()
+                        });
+                    }
+                ]);
         }
     };
 })(ngX || (ngX = {}));
@@ -71,6 +72,8 @@ var ngX;
                             var deferred = $q.defer();
                             var resolvedRouteData = {};
                             var routePromises = _this.getRoutePromisesByRouteName(routeName);
+                            if (routePromises.length < 1)
+                                return $q.when(true);
                             var prioritizedGroups = _this.reduceRoutePromisesByPriority(routePromises);
                             _this.invoke($injector, $q, prioritizedGroups, 0, function () {
                                 deferred.resolve(resolvedRouteData);
