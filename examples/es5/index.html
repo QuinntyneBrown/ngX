@@ -15,12 +15,14 @@
 
         function GreetingComponent() {}
 
+        GreetingComponent.prototype.greeting = "ngX!";
+
         ngX.Component({
             selector: "greeting",
             component: GreetingComponent,
             template: [
                 "<h1>",
-                "Greeting!",
+                "{{ ::vm.greeting }}",
                 "</h1>"
             ].join(" ")
         });
