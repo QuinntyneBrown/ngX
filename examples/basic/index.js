@@ -1,9 +1,14 @@
 angular.module("basicApp", ["ngX"]).config([
     "$routeProvider",
     function ($routeProvider) {
+        ngX.Configure({
+            templateMappingFn: function (options) {
+                var location = "/examples/basic/" + options.componentName.replace(/\W+/g, '.').replace(/([a-z\d])([A-Z])/g, '$1.$2') + ".html";
+                return location.toLowerCase();
+            }
+        });
         $routeProvider.when("/", {
-            componentName: "homeComponent",
-            componentTemplateUrl: "/examples/basic/home.component.html"
+            componentName: "homeComponent"
         });
     }
 ]);

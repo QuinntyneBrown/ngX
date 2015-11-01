@@ -59,6 +59,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="examples\es5\index.html" />
+    <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -87,7 +89,10 @@
     <TypeScriptCompile Include="examples\basic\index.ts" />
     <TypeScriptCompile Include="src\ngX\ngX.d.ts" />
     <TypeScriptCompile Include="src\ngX\ngX.module.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\appModuleName.ts" />
     <TypeScriptCompile Include="src\ngX\providers\component.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\configure.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\getTemplateUrlFromComponentName.ts" />
     <TypeScriptCompile Include="src\ngX\providers\routeResolverServiceProvider.ts" />
     <TypeScriptCompile Include="typings\angularjs\angular-route.d.ts" />
     <TypeScriptCompile Include="typings\angularjs\angular.d.ts" />

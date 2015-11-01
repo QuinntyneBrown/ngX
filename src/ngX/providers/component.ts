@@ -7,7 +7,9 @@
     */
     export var Component = (options: any) => {
 
-        if (options.template || options.templateUrl) {
+        options.module = options.module || "app";
+
+        if (options.selector) {
 
             var componentNameCamelCase = options.selector.replace(/-([a-z])/g, (g) => {
                 return g[1].toUpperCase();
@@ -20,8 +22,13 @@
                 template: options.template,
                 templateUrl: options.templateUrl,
                 replace: options.replace || true,
-                scope: options.scope || {}
+                scope: options.scope || {},     
+                transclude: options.transclude           
             }
+
+            //if (options.transclude)
+            //    angular.extend(directiveDefinitionObject, { transclude: options.transclude });
+                
 
             angular.module(options.module).directive(componentNameCamelCase,
                 [() => { return directiveDefinitionObject; }]);

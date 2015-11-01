@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ES5 Example</title>
+</head>
+<body data-ng-app="app">
+
+    <greeting/>
+
+    <script src="../../node_modules/angular/angular.min.js"></script>
+    <script src="../../node_modules/angular-route/angular-route.min.js"></script>
+    <script src="../../dist/ngX.js"></script>
+    <script>
+        angular.module("app", ["ngX"]);
+
+        function GreetingComponent() {}
+
+        ngX.Component({
+            selector: "greeting",
+            component: GreetingComponent,
+            template: [
+                "<h1>",
+                "Greeting!",
+                "</h1>"
+            ].join(" ")
+        });
+
+    </script>
+</body>
+</html>

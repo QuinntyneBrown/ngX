@@ -133,6 +133,13 @@
                     arguments[1].templateUrl = arguments[1].componentTemplateUrl || arguments[1].templateUrl;
                     arguments[1].controller = arguments[1].componentName || arguments[1].controller;
                     arguments[1].controllerAs = "vm";
+
+                    if (arguments[1].componentName && !arguments[1].templateUrl)
+                        arguments[1].templateUrl = ngX.getTemplateUrlFromComponentName({
+                            moduleName: arguments[1].moduleName,
+                            componentName: arguments[1].componentName
+                        });
+
                     arguments[1].resolve = {
                         routeData: ["routeResolverService", (routeResolverService: ngX.IRouteResolverService) => {
                             return routeResolverService.resolve(path);
@@ -140,6 +147,8 @@
                     }
                 }
                 whenFn.apply($routeProvider, arguments);
+
+                return $routeProvider;
             }
         }])
         .run(["$injector", "$location", "$rootScope", ($injector: ng.auto.IInjectorService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService) => {

@@ -4,13 +4,21 @@ angular.module("ngX", ["ngRoute"]);
 
 var ngX;
 (function (ngX) {
+    ngX.appModuleName = "app";
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=appModuleName.js.map
+
+var ngX;
+(function (ngX) {
     /**
     * @name Component
     * @description syntax sugar to ease transition to angular 2
     * @requires App.Common.RouteResolverServiceProvider
     */
     ngX.Component = function (options) {
-        if (options.template || options.templateUrl) {
+        options.module = options.module || "app";
+        if (options.selector) {
             var componentNameCamelCase = options.selector.replace(/-([a-z])/g, function (g) {
                 return g[1].toUpperCase();
             });
@@ -21,8 +29,11 @@ var ngX;
                 template: options.template,
                 templateUrl: options.templateUrl,
                 replace: options.replace || true,
-                scope: options.scope || {}
+                scope: options.scope || {},
+                transclude: options.transclude
             };
+            //if (options.transclude)
+            //    angular.extend(directiveDefinitionObject, { transclude: options.transclude });
             angular.module(options.module).directive(componentNameCamelCase, [function () { return directiveDefinitionObject; }]);
             options.component.$inject = options.providers;
             angular.module(options.module).controller(options.componentName || componentNameCamelCase + "Component", options.component);
@@ -52,6 +63,32 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=component.js.map
+
+var ngX;
+(function (ngX) {
+    ngX.Configure = function (options) {
+        if (options.templateMappingFn)
+            ngX.getTemplateUrlFromComponentName = options.templateMappingFn;
+        if (options.appModuleName)
+            ngX.appModuleName = options.appModuleName;
+    };
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=configure.js.map
+
+var ngX;
+(function (ngX) {
+    ngX.getTemplateUrlFromComponentName = function (options) {
+        var componentTemplateFileName = options.componentName.replace(/\W+/g, '.')
+            .replace(/([a-z\d])([A-Z])/g, '$1.$2') + ".html";
+        componentTemplateFileName = componentTemplateFileName.toLowerCase();
+        if (options.moduleName)
+            return "/src/" + options.moduleName + "/components/" + componentTemplateFileName;
+        return "/src/" + ngX.appModuleName + "/components/" + componentTemplateFileName;
+    };
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=getTemplateUrlFromComponentName.js.map
 
 var ngX;
 (function (ngX) {
@@ -171,6 +208,11 @@ var ngX;
                     arguments[1].templateUrl = arguments[1].componentTemplateUrl || arguments[1].templateUrl;
                     arguments[1].controller = arguments[1].componentName || arguments[1].controller;
                     arguments[1].controllerAs = "vm";
+                    if (arguments[1].componentName && !arguments[1].templateUrl)
+                        arguments[1].templateUrl = ngX.getTemplateUrlFromComponentName({
+                            moduleName: arguments[1].moduleName,
+                            componentName: arguments[1].componentName
+                        });
                     arguments[1].resolve = {
                         routeData: ["routeResolverService", function (routeResolverService) {
                                 return routeResolverService.resolve(path);
@@ -178,6 +220,7 @@ var ngX;
                     };
                 }
                 whenFn.apply($routeProvider, arguments);
+                return $routeProvider;
             };
         }])
         .run(["$injector", "$location", "$rootScope", function ($injector, $location, $rootScope) {
