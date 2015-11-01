@@ -60,6 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="examples\es5\index.html" />
+    <Content Include="examples\componentLifeCycle\about.component.html" />
+    <Content Include="examples\componentLifeCycle\home.component.html" />
+    <Content Include="examples\componentLifeCycle\index.html" />
     <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
