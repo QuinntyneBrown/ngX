@@ -1,3 +1,16 @@
+var ngX;
+(function (ngX) {
+    ngX.isBootstrapped = false;
+})(ngX || (ngX = {}));
+try {
+    if (angular)
+        ;
+}
+catch (error) {
+    var scriptTag = document.createElement('script');
+    scriptTag.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js');
+    document.head.appendChild(scriptTag);
+}
 try {
     angular.module("ngRoute");
     angular.module("ngX", ["ngRoute"]);
@@ -24,6 +37,17 @@ var ngX;
     * @requires App.Common.RouteResolverServiceProvider
     */
     ngX.Component = function (options) {
+        if (!ngX.isBootstrapped) {
+            var ngScopes = document.querySelectorAll('[ng-app]');
+            if (ngScopes.length < 1)
+                ngScopes = document.querySelectorAll('[data-ng-app]');
+            if (ngScopes.length < 1) {
+                angular.module("app", []);
+            }
+            else {
+                ngX.isBootstrapped = true;
+            }
+        }
         options.module = options.module || "app";
         if (options.selector) {
             var componentNameCamelCase = options.selector.replace(/-([a-z])/g, function (g) {
@@ -84,6 +108,9 @@ var ngX;
             }
             catch (error) {
             }
+        }
+        if (!ngX.isBootstrapped) {
+            angular.bootstrap(document, [options.module || "app"]);
         }
     };
 })(ngX || (ngX = {}));

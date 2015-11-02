@@ -1,5 +1,7 @@
 ﻿module ngX {
 
+    
+
     var componentStyles = {};
     /**
     * @name Component
@@ -7,6 +9,19 @@
     * @requires App.Common.RouteResolverServiceProvider
     */
     export var Component = (options: any) => {
+
+        if (!isBootstrapped) {
+            var ngScopes = document.querySelectorAll('[ng-app]');
+
+            if (ngScopes.length < 1)
+                ngScopes = document.querySelectorAll('[data-ng-app]');
+
+            if (ngScopes.length < 1) {
+                angular.module("app", []);
+            } else {
+                isBootstrapped = true;
+            }
+        }
 
         options.module = options.module || "app";
 
@@ -80,6 +95,10 @@
             } catch (error) {
                 
             }
+        }
+
+        if (!isBootstrapped) {
+            angular.bootstrap(document, [options.module || "app"]);
         }
     }
 
