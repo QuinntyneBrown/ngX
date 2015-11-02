@@ -11,7 +11,6 @@
     <script src="../../node_modules/angular-route/angular-route.min.js"></script>
     <script src="../../dist/ngX.js"></script>
     <script>
-
         angular.module("app", ["ngX"])
             .config(["$routeProvider", function ($routeProvider) {
                 $routeProvider.when("/", { 
@@ -25,22 +24,38 @@
                 });
             }]);
 
-        function HomeComponent() { }
+        function HomeComponent($q) {
 
-        HomeComponent.prototype.title = "Home";
+            return {
+                title: "Home",
+                onInit: function () { alert("onInit"); },
+                canDeactivate: function () { 
+                    alert("canDeactivate");
+                    return $q.when(true);
+                },
+                deactivate: function () { alert("deactivate"); }
+            }
+        }
 
-        HomeComponent.prototype.deactivate = function () { alert("Deactivate Home"); };
-
+        /* static */
+        HomeComponent.canActivate = function () {
+            return ["$q", function ($q) {
+                alert("can Activate!");
+                setTimeout(function() { return $q.when({ value: 1}); }, 1000);
+            }];
+        }
+            
         ngX.Component({
             component: HomeComponent,
-            componentName: "homeComponent"
+            componentName: "homeComponent",
+            providers:["$q"],
+            route: "/",
+            key: "home"
         });
 
-        function AboutComponent() { }
-
-        AboutComponent.prototype.title = "About";
-
-        AboutComponent.prototype.onInit = function () { alert("Activate About"); };
+        function AboutComponent() {
+            return { title: "About" }
+        }
 
         ngX.Component({
             component: AboutComponent,
@@ -73,6 +88,8 @@
                 "</div>"
             ].join(" ")
         });
+
+
     </script>
 </body>
 </html>

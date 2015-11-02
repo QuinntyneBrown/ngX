@@ -13,9 +13,12 @@
     <script>
         angular.module("app", ["ngX"]);
 
-        function GreetingComponent() {}
-
-        GreetingComponent.prototype.greeting = "ngX!";
+        function GreetingComponent() {
+            var greeting = "ngX";
+            return {
+                greeting: greeting
+            };
+        }
 
         ngX.Component({
             selector: "greeting",
