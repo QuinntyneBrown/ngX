@@ -17,6 +17,7 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    var componentStyles = {};
     /**
     * @name Component
     * @description syntax sugar to ease transition to angular 2
@@ -38,6 +39,22 @@ var ngX;
                 scope: options.scope || {},
                 transclude: options.transclude
             };
+            if (options.component.styles) {
+                directiveDefinitionObject.compile = function () {
+                    return {
+                        pre: function (scope, element, attributes, controller, transcludeFn) {
+                            if (!componentStyles[options.selector]) {
+                                var head = document.getElementsByTagName("head");
+                                var augmentedJQuery = angular.element("<style>" + options.component.styles + "</style>");
+                                head[0].appendChild(augmentedJQuery[0]);
+                                componentStyles[options.selector] = true;
+                            }
+                        },
+                        post: function (scope, element, attributes, controller, transcludeFn) {
+                        }
+                    };
+                };
+            }
             angular.module(options.module).directive(componentNameCamelCase, [function () { return directiveDefinitionObject; }]);
             options.component.$inject = options.providers;
             angular.module(options.module).controller(options.componentName || componentNameCamelCase + "Component", options.component);
@@ -110,6 +127,14 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=getTemplateUrlFromComponentName.js.map
+
+var ngX;
+(function (ngX) {
+    ngX.newGuid = function () {
+    };
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=guid.js.map
 
 var ngX;
 (function (ngX) {

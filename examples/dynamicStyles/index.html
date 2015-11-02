@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Dynamic Styles - ES5 Example</title>
+</head>
+<body data-ng-app="app">
+
+    <greeting></greeting>
+    
+
+    <script src="../../node_modules/angular/angular.min.js"></script>
+    <script src="../../dist/ngX.js"></script>
+    <script>
+        angular.module("app", []);
+
+        function GreetingComponent() {
+            var greeting = "ngX";
+            return {
+                greeting: greeting
+            };
+        }
+
+        GreetingComponent.styles = [
+            "h1.greeting { font-weight: 100; }"
+        ].join(" ");
+
+        ngX.Component({
+            selector: "greeting",
+            component: GreetingComponent,
+            template: [
+                "<h1 class='greeting'>",
+                "{{ ::vm.greeting }}",
+                "</h1>"
+            ].join(" ")
+        });
+
+    </script>
+</body>
+</html>

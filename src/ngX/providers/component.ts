@@ -1,5 +1,6 @@
 ﻿module ngX {
 
+    var componentStyles = {};
     /**
     * @name Component
     * @description syntax sugar to ease transition to angular 2
@@ -15,7 +16,7 @@
                 return g[1].toUpperCase();
             });
 
-            var directiveDefinitionObject = {
+            var directiveDefinitionObject:any = {
                 controllerAs: "vm",
                 controller: options.componentName || componentNameCamelCase + "Component",
                 restrict: options.restrict || "E",
@@ -26,6 +27,24 @@
                 transclude: options.transclude           
             }
 
+
+            if (options.component.styles) {
+                directiveDefinitionObject.compile = function() {
+                    return {
+                        pre: function (scope, element, attributes, controller, transcludeFn) {
+                            if (!componentStyles[options.selector]) {
+                                var head = document.getElementsByTagName("head");
+                                var augmentedJQuery = angular.element("<style>" + options.component.styles + "</style>");                                
+                                head[0].appendChild(augmentedJQuery[0]);
+                                componentStyles[options.selector] = true;
+                            }
+                        },
+                        post: function (scope, element, attributes, controller, transcludeFn) {
+                            
+                        }
+                    }
+                }
+            }
             angular.module(options.module).directive(componentNameCamelCase,
                 [() => { return directiveDefinitionObject; }]);
 

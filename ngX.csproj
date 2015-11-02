@@ -63,6 +63,7 @@
     <Content Include="examples\componentLifeCycle\about.component.html" />
     <Content Include="examples\componentLifeCycle\home.component.html" />
     <Content Include="examples\componentLifeCycle\index.html" />
+    <Content Include="examples\dynamicStyles\index.html" />
     <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -97,6 +98,7 @@
     <TypeScriptCompile Include="src\ngX\providers\configure.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getFunctionName.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getTemplateUrlFromComponentName.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\guid.ts" />
     <TypeScriptCompile Include="src\ngX\providers\routeResolverServiceProvider.ts" />
     <TypeScriptCompile Include="typings\angularjs\angular-route.d.ts" />
     <TypeScriptCompile Include="typings\angularjs\angular.d.ts" />
