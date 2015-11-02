@@ -43,18 +43,24 @@
             angular.module(options.module)
                 .controller(options.componentName || getFunctionName(options.component), options.component);
 
-            if (options.component.canActivate)
-                angular.module(options.module)
-                    .config([
-                        "routeResolverServiceProvider", (routeResolverServiceProvider: IRouteResolverServiceProvider) => {
-                            routeResolverServiceProvider.configure({
-                                route: options.route,
-                                routes: options.routes,
-                                key: options.key,
-                                promise: options.component.canActivate()
-                            });
-                        }
-                    ]);
+            try {
+                angular.module("ngRoute");
+
+                if (options.component.canActivate)
+                    angular.module(options.module)
+                        .config([
+                            "routeResolverServiceProvider", (routeResolverServiceProvider: IRouteResolverServiceProvider) => {
+                                routeResolverServiceProvider.configure({
+                                    route: options.route,
+                                    routes: options.routes,
+                                    key: options.key,
+                                    promise: options.component.canActivate()
+                                });
+                            }
+                        ]);
+            } catch (error) {
+                
+            }
         }
     }
 

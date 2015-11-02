@@ -1,4 +1,10 @@
-angular.module("ngX", ["ngRoute"]);
+try {
+    angular.module("ngRoute");
+    angular.module("ngX", ["ngRoute"]);
+}
+catch (error) {
+    angular.module("ngX", []);
+}
 
 //# sourceMappingURL=ngX.module.js.map
 
@@ -44,18 +50,23 @@ var ngX;
             options.component.$inject = options.providers;
             angular.module(options.module)
                 .controller(options.componentName || ngX.getFunctionName(options.component), options.component);
-            if (options.component.canActivate)
-                angular.module(options.module)
-                    .config([
-                    "routeResolverServiceProvider", function (routeResolverServiceProvider) {
-                        routeResolverServiceProvider.configure({
-                            route: options.route,
-                            routes: options.routes,
-                            key: options.key,
-                            promise: options.component.canActivate()
-                        });
-                    }
-                ]);
+            try {
+                angular.module("ngRoute");
+                if (options.component.canActivate)
+                    angular.module(options.module)
+                        .config([
+                        "routeResolverServiceProvider", function (routeResolverServiceProvider) {
+                            routeResolverServiceProvider.configure({
+                                route: options.route,
+                                routes: options.routes,
+                                key: options.key,
+                                promise: options.component.canActivate()
+                            });
+                        }
+                    ]);
+            }
+            catch (error) {
+            }
         }
     };
 })(ngX || (ngX = {}));
@@ -208,55 +219,60 @@ var ngX;
         return RouteResolverServiceProvider;
     })();
     ngX.RouteResolverServiceProvider = RouteResolverServiceProvider;
-    angular.module("ngX")
-        .provider("routeResolverService", [RouteResolverServiceProvider])
-        .config(["$routeProvider", function ($routeProvider) {
-            var whenFn = $routeProvider.when;
-            $routeProvider.when = function () {
-                if (arguments[1] && arguments[0]) {
-                    var path = arguments[0];
-                    arguments[1].templateUrl = arguments[1].componentTemplateUrl || arguments[1].templateUrl;
-                    arguments[1].controller = arguments[1].componentName || arguments[1].controller;
-                    arguments[1].controllerAs = "vm";
-                    if (arguments[1].componentName && !arguments[1].templateUrl)
-                        arguments[1].templateUrl = ngX.getTemplateUrlFromComponentName({
-                            moduleName: arguments[1].moduleName,
-                            componentName: arguments[1].componentName
+    try {
+        angular.module("ngRoute");
+        angular.module("ngX")
+            .provider("routeResolverService", [RouteResolverServiceProvider])
+            .config(["$routeProvider", function ($routeProvider) {
+                var whenFn = $routeProvider.when;
+                $routeProvider.when = function () {
+                    if (arguments[1] && arguments[0]) {
+                        var path = arguments[0];
+                        arguments[1].templateUrl = arguments[1].componentTemplateUrl || arguments[1].templateUrl;
+                        arguments[1].controller = arguments[1].componentName || arguments[1].controller;
+                        arguments[1].controllerAs = "vm";
+                        if (arguments[1].componentName && !arguments[1].templateUrl)
+                            arguments[1].templateUrl = ngX.getTemplateUrlFromComponentName({
+                                moduleName: arguments[1].moduleName,
+                                componentName: arguments[1].componentName
+                            });
+                        arguments[1].resolve = {
+                            routeData: ["routeResolverService", function (routeResolverService) {
+                                    return routeResolverService.resolve(path);
+                                }]
+                        };
+                    }
+                    whenFn.apply($routeProvider, arguments);
+                    return $routeProvider;
+                };
+            }])
+            .run(["$injector", "$location", "$rootScope", function ($injector, $location, $rootScope) {
+                $rootScope.$on("$viewContentLoaded", function () {
+                    var $route = $injector.get("$route");
+                    var instance = $route.current.scope[$route.current.controllerAs];
+                    if (instance.onInit)
+                        instance.onInit();
+                });
+                $rootScope.$on("$routeChangeStart", function (event, next, current) {
+                    var instance = current && current.controllerAs ? current.scope[current.controllerAs] : null;
+                    if (instance && instance.canDeactivate && !instance.deactivated) {
+                        event.preventDefault();
+                        instance.canDeactivate().then(function (canDeactivate) {
+                            if (canDeactivate) {
+                                instance.deactivated = true;
+                                $location.path(next.originalPath);
+                            }
                         });
-                    arguments[1].resolve = {
-                        routeData: ["routeResolverService", function (routeResolverService) {
-                                return routeResolverService.resolve(path);
-                            }]
-                    };
-                }
-                whenFn.apply($routeProvider, arguments);
-                return $routeProvider;
-            };
-        }])
-        .run(["$injector", "$location", "$rootScope", function ($injector, $location, $rootScope) {
-            $rootScope.$on("$viewContentLoaded", function () {
-                var $route = $injector.get("$route");
-                var instance = $route.current.scope[$route.current.controllerAs];
-                if (instance.onInit)
-                    instance.onInit();
-            });
-            $rootScope.$on("$routeChangeStart", function (event, next, current) {
-                var instance = current && current.controllerAs ? current.scope[current.controllerAs] : null;
-                if (instance && instance.canDeactivate && !instance.deactivated) {
-                    event.preventDefault();
-                    instance.canDeactivate().then(function (canDeactivate) {
-                        if (canDeactivate) {
-                            instance.deactivated = true;
-                            $location.path(next.originalPath);
-                        }
-                    });
-                }
-                else {
-                    if (instance && instance.deactivate)
-                        instance.deactivate();
-                }
-            });
-        }]);
+                    }
+                    else {
+                        if (instance && instance.deactivate)
+                            instance.deactivate();
+                    }
+                });
+            }]);
+    }
+    catch (error) {
+    }
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=routeResolverServiceProvider.js.map

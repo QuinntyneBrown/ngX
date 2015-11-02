@@ -118,6 +118,9 @@
         }
     }
 
+    try {
+        angular.module("ngRoute");
+
     angular.module("ngX")
         .provider("routeResolverService", [RouteResolverServiceProvider])
 
@@ -173,5 +176,8 @@
                         instance.deactivate();
                 }
             });
-        }]);
+            }]);
+    } catch (error) {
+
+    }
 } 
