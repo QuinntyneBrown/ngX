@@ -32,8 +32,6 @@ var ngX;
                 scope: options.scope || {},
                 transclude: options.transclude
             };
-            //if (options.transclude)
-            //    angular.extend(directiveDefinitionObject, { transclude: options.transclude });
             angular.module(options.module).directive(componentNameCamelCase, [function () { return directiveDefinitionObject; }]);
             options.component.$inject = options.providers;
             angular.module(options.module).controller(options.componentName || componentNameCamelCase + "Component", options.component);
@@ -45,7 +43,7 @@ var ngX;
         else {
             options.component.$inject = options.providers;
             angular.module(options.module)
-                .controller(options.componentName, options.component);
+                .controller(options.componentName || ngX.getFunctionName(options.component), options.component);
             if (options.component.canActivate)
                 angular.module(options.module)
                     .config([
@@ -75,6 +73,18 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=configure.js.map
+
+var ngX;
+(function (ngX) {
+    ngX.getFunctionName = function (fun) {
+        var ret = fun.toString();
+        ret = ret.substr('function '.length);
+        ret = ret.substr(0, ret.indexOf('('));
+        return ret[0].toLowerCase() + ret.substr(1);
+    };
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=getFunctionName.js.map
 
 var ngX;
 (function (ngX) {

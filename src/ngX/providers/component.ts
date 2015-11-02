@@ -26,10 +26,6 @@
                 transclude: options.transclude           
             }
 
-            //if (options.transclude)
-            //    angular.extend(directiveDefinitionObject, { transclude: options.transclude });
-                
-
             angular.module(options.module).directive(componentNameCamelCase,
                 [() => { return directiveDefinitionObject; }]);
 
@@ -45,7 +41,7 @@
             options.component.$inject = options.providers;
 
             angular.module(options.module)
-                .controller(options.componentName, options.component);
+                .controller(options.componentName || getFunctionName(options.component), options.component);
 
             if (options.component.canActivate)
                 angular.module(options.module)

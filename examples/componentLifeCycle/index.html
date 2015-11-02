@@ -24,6 +24,8 @@
                 });
             }]);
 
+
+
         function HomeComponent($q, routeData) {
 
             return {
@@ -52,7 +54,6 @@
             
         ngX.Component({
             component: HomeComponent,
-            componentName: "homeComponent",
             providers:["$q", "routeData"],
             route: "/",
             key: "home"
@@ -62,10 +63,7 @@
             return { title: "About" }
         }
 
-        ngX.Component({
-            component: AboutComponent,
-            componentName: "aboutComponent"
-        });
+        ngX.Component({ component: AboutComponent });
 
 
         function AppComponent() {}
