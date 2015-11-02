@@ -24,31 +24,36 @@
                 });
             }]);
 
-        function HomeComponent($q) {
+        function HomeComponent($q, routeData) {
 
             return {
-                title: "Home",
-                onInit: function () { alert("onInit"); },
+                title: routeData.home.title,
+                onInit: function () { console.log("onInit"); },
                 canDeactivate: function () { 
-                    alert("canDeactivate");
+                    console.log("canDeactivate");
                     return $q.when(true);
                 },
-                deactivate: function () { alert("deactivate"); }
+                deactivate: function () { console.log("deactivate"); }
             }
         }
 
         /* static */
         HomeComponent.canActivate = function () {
             return ["$q", function ($q) {
-                alert("can Activate!");
-                setTimeout(function() { return $q.when({ value: 1}); }, 1000);
+                console.log("can Activate: resolving promise...");
+                var deferred = $q.defer();
+                setTimeout(function () {
+                    console.log("can Activate: promise resolved...");
+                     return deferred.resolve({ title: "Home" });
+                }, 1000);
+                return deferred.promise;
             }];
         }
             
         ngX.Component({
             component: HomeComponent,
             componentName: "homeComponent",
-            providers:["$q"],
+            providers:["$q", "routeData"],
             route: "/",
             key: "home"
         });
