@@ -5,25 +5,24 @@
 </head>
     <body>
         
-        <my-photo my-url="'quinntynebrown.jpg'"></my-photo>
+        <hi></hi>
 
         <script src="../../node_modules/angular/angular.min.js"></script>
         <script src="../../dist/ngX.js"></script>
         <script>
 
-            function MyPhotoComponent() {
-                
+
+            function HiComponent() {
+                return {
+                    message: "there!"
+                }
             }
 
             ngX.Component({
-                selector: "my-photo",
-                component: MyPhotoComponent,
-                inputs: ['myUrl'],
-                template: [
-                    "<img src='{{ myUrl }}'></img>"
-                ].join(" ")
+                selector: "hi",
+                component: HiComponent,
+                template: "<h1>there!</h1>"
             });
-
         </script>
     </body>
 </html>

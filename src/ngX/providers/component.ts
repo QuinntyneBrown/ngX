@@ -1,7 +1,5 @@
 ﻿module ngX {
 
-    
-
     var componentStyles = {};
     /**
     * @name Component
@@ -44,7 +42,7 @@
                 transclude: options.transclude           
             }
 
-            if (options.inputs.length > 0) {
+            if (options.inputs && options.inputs.length > 0) {
                 for (var i = 0; i < options.inputs.length; i++) {
                     directiveDefinitionObject.scope[options.inputs[i]] = "=";
                 }
