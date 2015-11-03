@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ES5 Example</title>
+</head>
+    <body>
+        
+        <my-photo my-url="'quinntynebrown.jpg'"></my-photo>
+
+        <script src="../../node_modules/angular/angular.min.js"></script>
+        <script src="../../dist/ngX.js"></script>
+        <script>
+
+            function MyPhotoComponent() {
+                
+            }
+
+            ngX.Component({
+                selector: "my-photo",
+                component: MyPhotoComponent,
+                inputs: ['myUrl'],
+                template: [
+                    "<img src='{{ myUrl }}'></img>"
+                ].join(" ")
+            });
+
+        </script>
+    </body>
+</html>

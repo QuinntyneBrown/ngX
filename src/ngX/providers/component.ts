@@ -31,6 +31,8 @@
                 return g[1].toUpperCase();
             });
 
+
+
             var directiveDefinitionObject:any = {
                 controllerAs: "vm",
                 controller: options.componentName || componentNameCamelCase + "Component",
@@ -42,6 +44,11 @@
                 transclude: options.transclude           
             }
 
+            if (options.inputs.length > 0) {
+                for (var i = 0; i < options.inputs.length; i++) {
+                    directiveDefinitionObject.scope[options.inputs[i]] = "=";
+                }
+            }
 
             if (options.component.styles) {
                 directiveDefinitionObject.compile = function() {
