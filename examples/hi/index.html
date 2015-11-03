@@ -5,16 +5,12 @@
 </head>
     <body>
         
-        <hi></hi>
+        <hi my-data="[]"></hi>
 
-        <hi></hi>
-
-        <hi></hi>
 
         <script src="../../node_modules/angular/angular.min.js"></script>
         <script src="../../dist/ngX.js"></script>
         <script>
-
 
             function HiComponent() {
                 return {
@@ -22,11 +18,16 @@
                 }
             }
 
+            HiComponent.styles = "h1 { color:red;}";
+
             ngX.Component({
                 selector: "hi",
-                component: HiComponent,
+                component: HiComponent,                
+                input:["myData"],
                 template: "<h1>{{ vm.message }}</h1>"
             });
+
+            
         </script>
     </body>
 </html>
