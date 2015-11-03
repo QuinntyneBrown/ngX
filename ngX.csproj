@@ -64,8 +64,8 @@
     <Content Include="examples\componentLifeCycle\home.component.html" />
     <Content Include="examples\componentLifeCycle\index.html" />
     <Content Include="examples\dynamicStyles\index.html" />
-    <Content Include="examples\input\index.html" />
-    <Content Include="examples\input\quinntynebrown.jpg" />
+    <Content Include="examples\hi\index.html" />
+    <Content Include="examples\hi\quinntynebrown.jpg" />
     <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -7,6 +7,10 @@
         
         <hi></hi>
 
+        <hi></hi>
+
+        <hi></hi>
+
         <script src="../../node_modules/angular/angular.min.js"></script>
         <script src="../../dist/ngX.js"></script>
         <script>
@@ -14,14 +18,14 @@
 
             function HiComponent() {
                 return {
-                    message: "there!"
+                    message: "there message!"
                 }
             }
 
             ngX.Component({
                 selector: "hi",
                 component: HiComponent,
-                template: "<h1>there!</h1>"
+                template: "<h1>{{ vm.message }}</h1>"
             });
         </script>
     </body>
