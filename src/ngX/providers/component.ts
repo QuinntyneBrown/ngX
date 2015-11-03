@@ -54,9 +54,7 @@
                         pre: function (scope, element, attributes, controller, transcludeFn) {
                             if (!componentStyles[options.selector]) {
                                 componentStyles[options.selector] = true;
-
                                 document.addEventListener("DOMContentLoaded", onDocumentLoad);
-
                                 function onDocumentLoad() {
                                     var head = document.getElementsByTagName("head");
                                     var augmentedJQuery = angular.element("<style>" + options.component.styles + "</style>");
