@@ -17,7 +17,7 @@
                 ngScopes = document.querySelectorAll('[data-ng-app]');
 
             if (ngScopes.length < 1) {
-                angular.module("app", []);
+                angular.module("app", ["ngX"]);
             } else {
                 isBootstrapped = true;
             }

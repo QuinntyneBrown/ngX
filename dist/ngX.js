@@ -41,7 +41,7 @@ var ngX;
             if (ngScopes.length < 1)
                 ngScopes = document.querySelectorAll('[data-ng-app]');
             if (ngScopes.length < 1) {
-                angular.module("app", []);
+                angular.module("app", ["ngX"]);
             }
             else {
                 ngX.isBootstrapped = true;
@@ -179,6 +179,27 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    "use strict";
+    var getHtml = function (who, deep) {
+        if (!who || !who.tagName)
+            return '';
+        var txt, ax, el = document.createElement("div");
+        el.appendChild(who.cloneNode(false));
+        txt = el.innerHTML;
+        if (deep) {
+            ax = txt.indexOf('>') + 1;
+            txt = txt.substring(0, ax) + who.innerHTML + txt.substring(ax);
+        }
+        el = null;
+        return txt;
+    };
+    angular.module("ngX").value("getHtml", getHtml);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=getHtml.js.map
+
+var ngX;
+(function (ngX) {
     ngX.getTemplateUrlFromComponentName = function (options) {
         var componentTemplateFileName = options.componentName.replace(/\W+/g, '.')
             .replace(/([a-z\d])([A-Z])/g, '$1.$2') + ".html";
@@ -212,6 +233,102 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=guid.js.map
+
+var ngX;
+(function (ngX) {
+    "use strict";
+    /**
+    * @name RenderedNodes
+    * @module ngX
+    * @description
+    */
+    var RenderedNodes = (function () {
+        function RenderedNodes(getX) {
+            var _this = this;
+            this.getX = getX;
+            this.createInstance = function (options) {
+                var instance = new RenderedNodes(_this.getX);
+                instance.containerNavtiveElement = options.containerNavtiveElement;
+                return instance;
+            };
+            this.getAll = function (options) {
+                var direction;
+                switch (options.orientation) {
+                    case "horizontal":
+                        direction = "left";
+                        break;
+                    default:
+                        direction = "top";
+                        break;
+                }
+                switch (options.order) {
+                    case "desc":
+                        return _this.map.sort(function (a, b) {
+                            return b[direction] - a[direction];
+                        });
+                    case "asc":
+                        return _this.map.sort(function (a, b) {
+                            return a[direction] - b[direction];
+                        });
+                }
+            };
+            this.getHead = function () {
+                var map = _this.getAll({ order: "asc" });
+                if (map.length < 1) {
+                    return null;
+                }
+                return map[0];
+            };
+            this.getTail = function () {
+                var map = _this.getAll({ order: "desc" });
+                if (map.length < 1) {
+                    return null;
+                }
+                return map[0];
+            };
+            this.getHeadAndTail = function () {
+                var map = _this.getAll({ order: "asc" });
+                if (map.length < 1) {
+                    return null;
+                }
+                return {
+                    head: map[0],
+                    tail: map[map.length - 1]
+                };
+            };
+        }
+        Object.defineProperty(RenderedNodes.prototype, "nodes", {
+            /** @internal */
+            get: function () {
+                return this.containerNavtiveElement.childNodes;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(RenderedNodes.prototype, "map", {
+            get: function () {
+                var map = [];
+                var nodes = this.nodes;
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    map.push({
+                        left: this.getX(node) + node.offsetLeft,
+                        node: node,
+                        scope: angular.element(node).scope()
+                    });
+                }
+                return map;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return RenderedNodes;
+    })();
+    ngX.RenderedNodes = RenderedNodes;
+    angular.module("ngX").service("renderedNodes", ["getX", RenderedNodes]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=renderedNodes.js.map
 
 var ngX;
 (function (ngX) {
@@ -378,6 +495,22 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=routeResolverServiceProvider.js.map
+
+var ngX;
+(function (ngX) {
+    ngX.translateX = function (element, value) {
+        angular.element(element).css({
+            "-moz-transform": "translateX(" + value + "px)",
+            "-webkit-transform": "translateX(" + value + "px)",
+            "-ms-transform": "translateX(" + value + "px)",
+            "-transform": "translateX(" + value + "px)"
+        });
+        return element;
+    };
+    angular.module("ngX").value("translateX", ngX.translateX);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=translateX.js.map
 
 var ngX;
 (function (ngX) {
