@@ -53,15 +53,18 @@
                     return {
                         pre: function (scope, element, attributes, controller, transcludeFn) {
                             if (!componentStyles[options.selector]) {
-                                var head = document.getElementsByTagName("head");
-                                var augmentedJQuery = angular.element("<style>" + options.component.styles + "</style>");                                
-                                head[0].appendChild(augmentedJQuery[0]);
                                 componentStyles[options.selector] = true;
+
+                                document.addEventListener("DOMContentLoaded", onDocumentLoad);
+
+                                function onDocumentLoad() {
+                                    var head = document.getElementsByTagName("head");
+                                    var augmentedJQuery = angular.element("<style>" + options.component.styles + "</style>");
+                                    head[0].appendChild(augmentedJQuery[0]);
+                                    document.removeEventListener("DOMContentLoaded", onDocumentLoad);
+                                }
                             }
                         },
-                        post: function (scope, element, attributes, controller, transcludeFn) {
-                            
-                        }
                     }
                 }
             }
