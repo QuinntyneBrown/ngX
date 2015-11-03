@@ -1,5 +1,17 @@
 ﻿ declare module ngX {
  
+     export interface IGetX {
+         (element: HTMLElement): number;
+     }
+
+    /**
+     * @name ITranslateXAsync
+     * @module App.UI
+     */
+     export interface ITranslateXAsync {
+         (options: any): ng.IPromise<any>;
+     }
+
      /**
 * @name IRouteResolverServiceProvider
 * @module App.Common

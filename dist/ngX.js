@@ -2,11 +2,10 @@ var ngX;
 (function (ngX) {
     ngX.isBootstrapped = false;
 })(ngX || (ngX = {}));
-try {
-    if (angular)
-        ;
+function isAngularPresent() {
+    return typeof angular === 'object';
 }
-catch (error) {
+if (isAngularPresent() === false) {
     var scriptTag = document.createElement('script');
     scriptTag.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js');
     document.head.appendChild(scriptTag);
@@ -131,6 +130,43 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    "use strict";
+    // Extracted from Underscore.js 1.5.2
+    function debounce(func, wait, immediate) {
+        var timeout, args, context, timestamp, result;
+        return function () {
+            context = this;
+            args = arguments;
+            timestamp = new Date();
+            var later = function () {
+                var last = (new Date()) - timestamp;
+                if (last < wait) {
+                    timeout = setTimeout(later, wait - last);
+                }
+                else {
+                    timeout = null;
+                    if (!immediate) {
+                        result = func.apply(context, args);
+                    }
+                }
+            };
+            var callNow = immediate && !timeout;
+            if (!timeout) {
+                timeout = setTimeout(later, wait);
+            }
+            if (callNow) {
+                result = func.apply(context, args);
+            }
+            return result;
+        };
+    }
+    angular.module("ngX").value("debounce", debounce);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=debounce.js.map
+
+var ngX;
+(function (ngX) {
     ngX.getFunctionName = function (fun) {
         var ret = fun.toString();
         ret = ret.substr('function '.length);
@@ -154,6 +190,20 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=getTemplateUrlFromComponentName.js.map
+
+var ngX;
+(function (ngX) {
+    ngX.getX = function (element) {
+        var transform = angular.element(element).css("transform");
+        if (transform === "none")
+            return 0;
+        var result = JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"));
+        return JSON.parse(transform.replace(/^\w+\(/, "[").replace(/\)$/, "]"))[4];
+    };
+    angular.module("ngX").value("getX", ngX.getX);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=getX.js.map
 
 var ngX;
 (function (ngX) {
@@ -328,3 +378,27 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=routeResolverServiceProvider.js.map
+
+var ngX;
+(function (ngX) {
+    "use strict";
+    var $q = angular.injector(['ng']).get("$q");
+    ngX.translateXAsync = function (options) {
+        var deferred = $q.defer();
+        angular.element(options.element).css({
+            "-moz-transform": "translateX(" + options.x + "px)",
+            "-webkit-transform": "translateX(" + options.x + "px)",
+            "-ms-transform": "translateX(" + options.x + "px)",
+            "-transform": "translateX(" + options.x + "px)"
+        });
+        options.element.addEventListener('transitionend', resolve, false);
+        function resolve() {
+            options.element.removeEventListener('transitionend', resolve);
+            deferred.resolve();
+        }
+        return deferred.promise;
+    };
+    angular.module("ngX").value("translateXAsync", ngX.translateXAsync);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=translateXAsync.js.map
