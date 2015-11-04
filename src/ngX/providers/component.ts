@@ -1,6 +1,6 @@
 ﻿module ngX {
 
-    var componentStyles = {};
+    
     /**
     * @name Component
     * @description syntax sugar to ease transition to angular 2

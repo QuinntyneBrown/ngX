@@ -1,4 +1,6 @@
 ﻿module ngX {
+    export var componentStyles = {};
+
     export var isBootstrapped = false;
 }
 
@@ -14,8 +16,12 @@ if (isAngularPresent() === false) {
 
 try {
     angular.module("ngRoute");
+    
+    angular.module("ngX", ["ngRoute"]);
 
-    angular.module("ngX", ["ngRoute"]); 
-    } catch (error) {
+} catch (error) {
+
     angular.module("ngX", []); 
 }
+
+angular.module("ngX.components", ["ngX"]);

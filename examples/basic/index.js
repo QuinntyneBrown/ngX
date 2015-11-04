@@ -1,22 +1,24 @@
-angular.module("basicApp", ["ngX"])
-    .config([
-    "$routeProvider", function ($routeProvider) {
+angular.module("basicApp", ["ngX"]).config([
+    "$routeProvider",
+    function ($routeProvider) {
         ngX.Configure({
             templateMappingFn: function (options) {
-                var location = "/examples/basic/" + options.componentName.replace(/\W+/g, '.')
-                    .replace(/([a-z\d])([A-Z])/g, '$1.$2') + ".html";
+                var location = "/examples/basic/" + options.componentName.replace(/\W+/g, '.').replace(/([a-z\d])([A-Z])/g, '$1.$2') + ".html";
                 return location.toLowerCase();
             }
         });
         $routeProvider.when("/", {
             componentName: "homeComponent"
         });
-    }]);
+    }
+]);
 var HomeComponent = (function () {
     function HomeComponent() {
     }
     Object.defineProperty(HomeComponent.prototype, "greeting", {
-        get: function () { return "ngX"; },
+        get: function () {
+            return "ngX";
+        },
         enumerable: true,
         configurable: true
     });
@@ -45,7 +47,9 @@ var AnotherComponent = (function () {
         this.bootstrap();
     }
     Object.defineProperty(AnotherComponent.prototype, "anotherGreeting", {
-        get: function () { return "ngX Boom!"; },
+        get: function () {
+            return "ngX Boom!";
+        },
         enumerable: true,
         configurable: true
     });
