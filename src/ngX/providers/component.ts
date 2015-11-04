@@ -73,8 +73,12 @@
                             }
                         },
                         post: function (scope: any) {
-                            if (options.properties)
-                                angular.extend(scope, options.properties);                            
+                            if (options.properties) {
+                                for (var prop in options.properties) {
+                                    scope[prop] = options.properties[prop].value();
+                                }
+
+                            }
                         }
                     }
                 }
