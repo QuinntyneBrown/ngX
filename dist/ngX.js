@@ -183,6 +183,16 @@ var ngX;
                     directiveDefinitionObject.scope[options.inputs[i]] = "=";
                 }
             }
+            if (options.properties) {
+                for (var prop in options.properties) {
+                    if (options.properties[prop].type && options.properties[prop].type === Object) {
+                        directiveDefinitionObject.scope[prop] = "=";
+                    }
+                    else {
+                        directiveDefinitionObject.scope[prop] = "@";
+                    }
+                }
+            }
             if ((options.component && options.component.styles) || options.styles) {
                 var styles = options.styles ? options.styles : options.component.styles;
                 directiveDefinitionObject.compile = function () {
@@ -202,7 +212,8 @@ var ngX;
                         post: function (scope) {
                             if (options.properties) {
                                 for (var prop in options.properties) {
-                                    scope[prop] = options.properties[prop].value();
+                                    if (options.properties[prop].value)
+                                        scope[prop] = options.properties[prop].value();
                                 }
                             }
                         }

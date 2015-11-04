@@ -5,7 +5,7 @@
 </head>
     <body>
         
-        <hi></hi>
+        <hi author="{ name: 'Quinntyne Brown'}" title="ngX!"></hi>
 
         <script src="../../node_modules/angular/angular.min.js"></script>
         <script src="../../dist/ngX.js"></script>
@@ -13,15 +13,20 @@
             
             ngX.Component({
                 is: "hi",
-                styles: "h1 { color:red; }",
-                template: "<h1>{{ author.name }}</h1>",
+                styles: "h1 { color:blue; }",
+                template: ["<div>",
+                    "<h1>{{ title }}</h1>",
+                    "<h2>{{ author.name }}</h2>",
+                    "<input type='text' data-ng-model='title'></input>",
+                    "</div>"].join(" "),
                 properties: {
                     author: {
-                        type: Object,
-                        value: function () { return { name: "Quinntyne Brown" }; }
-                    }
+                        type: Object
+                    },
+                    title: String
                 }
             });
+
 
         </script>
     </body>
