@@ -66,7 +66,11 @@
     <Content Include="examples\dynamicStyles\index.html" />
     <Content Include="examples\hi\index.html" />
     <Content Include="examples\hi\quinntynebrown.jpg" />
+    <Content Include="examples\polymerStyle\index.html" />
     <Content Include="package.json" />
+    <Content Include="dist\ngX.min.js.map">
+      <DependentUpon>ngX.min.js</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

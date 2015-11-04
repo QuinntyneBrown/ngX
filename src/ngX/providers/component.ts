@@ -23,17 +23,17 @@
 
         options.module = options.module || "app";
 
+        /* supoort for polymer syntax*/
+
+        options.selector = options.selector || options.is;
+
         if (options.selector) {
 
             var componentNameCamelCase = options.selector.replace(/-([a-z])/g, (g) => {
                 return g[1].toUpperCase();
             });
 
-
-
             var directiveDefinitionObject:any = {
-                controllerAs: "vm",
-                controller: options.componentName || componentNameCamelCase + "Component",
                 restrict: options.restrict || "E",
                 template: options.template,
                 templateUrl: options.templateUrl,
@@ -42,13 +42,22 @@
                 transclude: options.transclude           
             }
 
+            if (options.component) {
+                directiveDefinitionObject.controllerAs = "vm";
+                directiveDefinitionObject.controller = options.componentName || componentNameCamelCase + "Component";
+                options.component.$inject = options.providers;
+            }
+
             if (options.inputs && options.inputs.length > 0) {
                 for (var i = 0; i < options.inputs.length; i++) {
                     directiveDefinitionObject.scope[options.inputs[i]] = "=";
                 }
             }
 
-            if (options.component.styles) {
+            if ((options.component && options.component.styles) || options.styles) {
+
+                var styles = options.styles ? options.styles : options.component.styles;
+
                 directiveDefinitionObject.compile = function() {
                     return {
                         pre: function (scope, element, attributes, controller, transcludeFn) {
@@ -57,19 +66,26 @@
                                 document.addEventListener("DOMContentLoaded", onDocumentLoad);
                                 function onDocumentLoad() {
                                     var head = document.getElementsByTagName("head");
-                                    var augmentedJQuery = angular.element("<style>" + options.component.styles + "</style>");
+                                    var augmentedJQuery = angular.element("<style>" + styles + "</style>");
                                     head[0].appendChild(augmentedJQuery[0]);
                                     document.removeEventListener("DOMContentLoaded", onDocumentLoad);
                                 }
                             }
                         },
+                        post: function (scope: any) {
+                            if (options.properties)
+                                angular.extend(scope, options.properties);                            
+                        }
                     }
                 }
             }
+
+
+
             angular.module(options.module).directive(componentNameCamelCase,
                 [() => { return directiveDefinitionObject; }]);
 
-            options.component.$inject = options.providers;
+            
 
             angular.module(options.module).controller(options.componentName || componentNameCamelCase + "Component", options.component);
 

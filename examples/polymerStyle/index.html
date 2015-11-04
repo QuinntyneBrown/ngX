@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Polymer Style</title>
+</head>
+    <body>
+        
+        <hi></hi>
+
+        <script src="../../node_modules/angular/angular.min.js"></script>
+        <script src="../../dist/ngX.js"></script>
+        <script>
+            
+            ngX.Component({
+                is: "hi",
+                styles: "h1 { color:red; }",
+                template: "<h1>{{ author }}</h1>",
+                properties: {
+                    author: "Quinntyne Brown"
+                }
+            });
+
+        </script>
+    </body>
+</html>
