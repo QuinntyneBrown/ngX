@@ -165,18 +165,25 @@ var ngX;
             var componentNameCamelCase = options.selector.replace(/-([a-z])/g, function (g) {
                 return g[1].toUpperCase();
             });
+            if (options.is)
+                options.transclude = "element";
             var directiveDefinitionObject = {
                 restrict: options.restrict || "E",
                 template: options.template,
                 templateUrl: options.templateUrl,
                 replace: options.replace || true,
                 scope: options.scope || {},
+                bindToController: options.bindToController || {},
                 transclude: options.transclude
             };
             if (options.component) {
                 directiveDefinitionObject.controllerAs = "vm";
                 directiveDefinitionObject.controller = options.componentName || componentNameCamelCase + "Component";
                 options.component.$inject = options.providers;
+            }
+            else {
+                directiveDefinitionObject.controllerAs = "vm";
+                directiveDefinitionObject.controller = function () { };
             }
             if (options.inputs && options.inputs.length > 0) {
                 for (var i = 0; i < options.inputs.length; i++) {
@@ -186,10 +193,10 @@ var ngX;
             if (options.properties) {
                 for (var prop in options.properties) {
                     if (options.properties[prop].type && options.properties[prop].type === Object) {
-                        directiveDefinitionObject.scope[prop] = "=";
+                        directiveDefinitionObject.bindToController[prop] = "=";
                     }
                     else {
-                        directiveDefinitionObject.scope[prop] = "@";
+                        directiveDefinitionObject.bindToController[prop] = "@";
                     }
                 }
             }
@@ -198,6 +205,9 @@ var ngX;
                 directiveDefinitionObject.compile = function () {
                     return {
                         pre: function (scope, element, attributes, controller, transcludeFn) {
+                            if (options.transclude)
+                                transcludeFn(scope, function (clone) {
+                                });
                             if (!ngX.componentStyles[options.selector]) {
                                 ngX.componentStyles[options.selector] = true;
                                 document.addEventListener("DOMContentLoaded", onDocumentLoad);

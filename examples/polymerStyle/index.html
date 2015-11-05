@@ -5,7 +5,11 @@
 </head>
     <body>
         
-        <hi author="{ name: 'Quinntyne Brown'}" title="ngX!"></hi>
+        <hi author="{ name: 'Quinntyne Brown'}" title="ngX!">
+            <content>
+                Something more!
+            </content>
+        </hi>
 
         <script src="../../node_modules/angular/angular.min.js"></script>
         <script src="../../dist/ngX.js"></script>
@@ -15,9 +19,9 @@
                 is: "hi",
                 styles: "h1 { color:blue; }",
                 template: ["<div>",
-                    "<h1>{{ title }}</h1>",
-                    "<h2>{{ author.name }}</h2>",
-                    "<input type='text' data-ng-model='title'></input>",
+                    "<h1>{{ vm.title }}</h1>",
+                    "<h2>{{ vm.author.name }}</h2>",
+                    "<input type='text' data-ng-model='vm.title'></input>",
                     "</div>"].join(" "),
                 properties: {
                     author: {
@@ -26,6 +30,10 @@
                     title: String
                 }
             });
+
+            // todo: implement notify, observer, computed properties, outputs and service worker and content inclusion
+
+            // multiple component builders
 
 
         </script>
