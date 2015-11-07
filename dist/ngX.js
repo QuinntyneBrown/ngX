@@ -281,6 +281,44 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    /**
+     * @name DataService
+     * @module ngX
+     */
+    var DataService = (function () {
+        function DataService($http, $q) {
+            var _this = this;
+            this.$http = $http;
+            this.$q = $q;
+            this.inMemoryCache = {};
+            this.fromServiceOrCache = function (options) {
+                var deferred = _this.$q.defer();
+                _this.$http({ method: options.method, url: options.url }).then(function (results) {
+                    deferred.resolve(results);
+                });
+                return deferred.promise;
+            };
+            this.fromService = function (options) {
+                var deferred = _this.$q.defer();
+                _this.$http({ method: options.method, url: options.url }).then(function (results) {
+                    deferred.resolve(results);
+                });
+                return deferred.promise;
+            };
+            this.invalidateCache = function () {
+                _this.inMemoryCache = {};
+            };
+        }
+        return DataService;
+    })();
+    ngX.DataService = DataService;
+    angular.module("ngX").service("dataService", ["$http", "$q", DataService]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=dataService.js.map
+
+var ngX;
+(function (ngX) {
     "use strict";
     // Extracted from Underscore.js 1.5.2
     function debounce(func, wait, immediate) {

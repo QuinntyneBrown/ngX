@@ -16,7 +16,7 @@
 
         reporters: ['progress', 'coverage'],
 
-        preprocessors: { 'dist/photographyApp.js': ['coverage'] },
+        preprocessors: { 'dist/ngX.js': ['coverage'] },
 
         port: 9876,
 

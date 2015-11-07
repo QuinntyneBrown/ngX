@@ -104,6 +104,7 @@
     <TypeScriptCompile Include="src\ngX\providers\appModuleName.ts" />
     <TypeScriptCompile Include="src\ngX\providers\component.ts" />
     <TypeScriptCompile Include="src\ngX\providers\configure.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\dataService.ts" />
     <TypeScriptCompile Include="src\ngX\providers\debounce.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getFunctionName.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getHtml.ts" />
