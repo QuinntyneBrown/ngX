@@ -20,7 +20,7 @@
 
         public fromService = (options: any) => {
             var deferred = this.$q.defer();
-            this.$http({ method: options.method, url: options.url }).then((results) => {
+            this.$http({ method: options.method, url: options.url, data: options.data, params: options.params }).then((results) => {
                 deferred.resolve(results);
             });
             return deferred.promise;

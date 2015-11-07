@@ -275,6 +275,12 @@ var ngX;
                                         scope[prop] = options.properties[prop].value();
                                 }
                             }
+                            if (scope.vm && scope.vm.onInit)
+                                scope.vm.onInit();
+                            scope.$on("$routeUpdate", function () {
+                                if (scope.vm && scope.vm.onUpdate)
+                                    scope.vm.onUpdate();
+                            });
                         }
                     };
                 };
@@ -349,7 +355,7 @@ var ngX;
             };
             this.fromService = function (options) {
                 var deferred = _this.$q.defer();
-                _this.$http({ method: options.method, url: options.url }).then(function (results) {
+                _this.$http({ method: options.method, url: options.url, data: options.data, params: options.params }).then(function (results) {
                     deferred.resolve(results);
                 });
                 return deferred.promise;

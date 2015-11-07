@@ -1,0 +1,1 @@
+﻿// add model registration with change notifications firing after save method or update method 

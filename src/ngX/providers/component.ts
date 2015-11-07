@@ -103,6 +103,14 @@
                                 }
 
                             }
+
+                            if (scope.vm && scope.vm.onInit)
+                                scope.vm.onInit();
+
+                            scope.$on("$routeUpdate", function() {
+                                if (scope.vm && scope.vm.onUpdate)
+                                    scope.vm.onUpdate();
+                            });
                         }
                     }
                 }
