@@ -28,17 +28,28 @@
 
 
 
-        function ListDetailComponent($location) {
+        function ListDetailComponent($location, $scope) {
 
+            var self = this;
+            self.loadedDateTime = Date.now();
 
-            return {
-                loadedDateTime: Date.now()
-            }
+            self._routeUpdateTime = Date.now();
+
+            Object.defineProperty(self, "routeUpdateTime", {
+                get: function () { return self._routeUpdateTime; },
+                set: function (value) { self._routeUpdateTime = value; }
+            });
+
+            $scope.$on("$routeUpdate", function() {
+                self.routeUpdateTime = Date.now();               
+            });
+
+            return self;
         }
 
         ngX.Component({
             component: ListDetailComponent,
-            providers:["$location"]
+            providers:["$location","$scope"]
         });
 
         ngX.Component({
