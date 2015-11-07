@@ -411,6 +411,21 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    "use strict";
+    angular.module("ngX").value("fire", function (target, type, properties) {
+        var htmlEvent = document.createEvent("HTMLEvents");
+        htmlEvent.initEvent(type, true, true);
+        for (var j in properties) {
+            htmlEvent[j] = properties[j];
+        }
+        target.dispatchEvent(htmlEvent);
+    });
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=fire.js.map
+
+var ngX;
+(function (ngX) {
     ngX.getFunctionName = function (fun) {
         var ret = fun.toString();
         ret = ret.substr('function '.length);
@@ -479,6 +494,10 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=guid.js.map
+
+// add model registration with change notifications firing after save method or update method  
+
+//# sourceMappingURL=model.js.map
 
 var ngX;
 (function (ngX) {
