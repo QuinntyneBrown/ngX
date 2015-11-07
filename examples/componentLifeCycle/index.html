@@ -1,20 +1,18 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Component LifeCycle</title>
 </head>
 <body data-ng-app="app">
-
     <my-app></my-app>
-
     <script src="../../node_modules/angular/angular.min.js"></script>
     <script src="../../node_modules/angular-route/angular-route.min.js"></script>
     <script src="../../dist/ngX.js"></script>
     <script>
         angular.module("app", ["ngX"])
             .config(["$routeProvider", function ($routeProvider) {
-                $routeProvider.when("/", { 
-                    componentName: "homeComponent", 
+                $routeProvider.when("/", {
+                    componentName: "homeComponent",
                     componentTemplateUrl: "/examples/componentLifeCycle/home.component.html"
                 });
 
@@ -22,6 +20,22 @@
                     componentName: "aboutComponent",
                     componentTemplateUrl: "/examples/componentLifeCycle/about.component.html"
                 });
+
+                $routeProvider.when("/override", {
+                    resolve: {
+                        override: [
+                            "$location", "$q", function($location, $q) {
+                                var deferred = $q.defer();
+
+                                $location.path("/");
+                                deferred.reject();
+                                return deferred.promise;
+
+                            }
+                        ]
+                    }
+                });
+
             }]);
 
 
@@ -31,7 +45,7 @@
             return {
                 title: routeData.home.title,
                 onInit: function () { console.log("onInit"); },
-                canDeactivate: function () { 
+                canDeactivate: function () {
                     console.log("canDeactivate");
                     return $q.when(true);
                 },
@@ -46,15 +60,15 @@
                 var deferred = $q.defer();
                 setTimeout(function () {
                     console.log("can Activate: promise resolved...");
-                     return deferred.resolve({ title: "Home" });
+                    return deferred.resolve({ title: "Home" });
                 }, 0);
                 return deferred.promise;
             }];
         }
-            
+
         ngX.Component({
             component: HomeComponent,
-            providers:["$q", "routeData"],
+            providers: ["$q", "routeData"],
             route: "/",
             key: "home"
         });
@@ -66,7 +80,7 @@
         ngX.Component({ component: AboutComponent });
 
 
-        function AppComponent() {}
+        function AppComponent() { }
 
         ngX.Component({
             selector: "my-app",

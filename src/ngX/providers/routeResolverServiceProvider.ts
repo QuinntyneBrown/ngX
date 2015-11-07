@@ -142,12 +142,15 @@
                             moduleName: arguments[1].moduleName,
                             componentName: arguments[1].componentName
                         });
+                    arguments[1].resolve = arguments[1].resolve || {};
 
-                    arguments[1].resolve = {
-                        routeData: ["routeResolverService", (routeResolverService: ngX.IRouteResolverService) => {
-                            return routeResolverService.resolve(path);
-                        }]
-                    }
+                    angular.extend(arguments[1].resolve, {
+                        routeData: [
+                            "routeResolverService", (routeResolverService: ngX.IRouteResolverService) => {
+                                return routeResolverService.resolve(path);
+                            }
+                        ]
+                    });
                 }
                 whenFn.apply($routeProvider, arguments);
 
@@ -162,7 +165,7 @@
             });
 
             $rootScope.$on("$routeChangeStart", (event, next, current) => {
-                var instance = current && current.controllerAs ? current.scope[current.controllerAs] : null;
+                var instance = current && current.controllerAs && current.scope ? current.scope[current.controllerAs] : null;
                 if (instance && instance.canDeactivate && !instance.deactivated) {
                     event.preventDefault();
                     instance.canDeactivate().then((canDeactivate: boolean) => {

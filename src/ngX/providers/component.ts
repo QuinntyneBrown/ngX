@@ -57,7 +57,7 @@
 
             if (options.inputs && options.inputs.length > 0) {
                 for (var i = 0; i < options.inputs.length; i++) {
-                    directiveDefinitionObject.scope[options.inputs[i]] = "=";
+                    directiveDefinitionObject.bindToController[options.inputs[i]] = "=";
                 }
             }
 

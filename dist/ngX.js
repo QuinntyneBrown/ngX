@@ -134,6 +134,55 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    "use strict";
+    /**
+     * @name ApiEndpointProvider
+     */
+    var ApiEndpointProvider = (function () {
+        function ApiEndpointProvider() {
+            var _this = this;
+            this.config = {
+                getBaseUrl: function (name) {
+                    var baseUrl = "";
+                    if (name) {
+                        _this.config.baseUrls.forEach(function (endpointDefinition) {
+                            if (name === endpointDefinition.name) {
+                                baseUrl = endpointDefinition.url;
+                            }
+                        });
+                    }
+                    if (!name || baseUrl === "") {
+                        _this.config.baseUrls.forEach(function (endpointDefinition) {
+                            if (!endpointDefinition.name && baseUrl === "") {
+                                baseUrl = endpointDefinition.url;
+                            }
+                        });
+                    }
+                    return baseUrl;
+                },
+                baseUrls: [],
+                configure: function (baseUrl, name) {
+                    var self = this;
+                    self.baseUrls.push({ url: baseUrl, name: name });
+                }
+            };
+        }
+        ApiEndpointProvider.prototype.configure = function (baseUrl, name) {
+            this.config.baseUrls.push({ url: baseUrl, name: name });
+        };
+        ApiEndpointProvider.prototype.$get = function () {
+            return this.config;
+        };
+        return ApiEndpointProvider;
+    })();
+    ngX.ApiEndpointProvider = ApiEndpointProvider;
+    angular.module("ngX").provider("apiEndpoint", ApiEndpointProvider);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=apiEndpointProvider.js.map
+
+var ngX;
+(function (ngX) {
     ngX.appModuleName = "app";
 })(ngX || (ngX = {}));
 
@@ -187,7 +236,7 @@ var ngX;
             }
             if (options.inputs && options.inputs.length > 0) {
                 for (var i = 0; i < options.inputs.length; i++) {
-                    directiveDefinitionObject.scope[options.inputs[i]] = "=";
+                    directiveDefinitionObject.bindToController[options.inputs[i]] = "=";
                 }
             }
             if (options.properties) {
@@ -390,12 +439,14 @@ var ngX;
 var ngX;
 (function (ngX) {
     ngX.getTemplateUrlFromComponentName = function (options) {
-        var componentTemplateFileName = options.componentName.replace(/\W+/g, '.')
-            .replace(/([a-z\d])([A-Z])/g, '$1.$2') + ".html";
-        componentTemplateFileName = componentTemplateFileName.toLowerCase();
-        if (options.moduleName)
-            return "/src/" + options.moduleName + "/components/" + componentTemplateFileName;
-        return "/src/" + ngX.appModuleName + "/components/" + componentTemplateFileName;
+        if (options.componentName.length > 9) {
+            if (options.componentName.substr(options.componentName.length - 9) === "Component") {
+                var componentTemplateFileName = options.componentName.substr(0, options.componentName.length - 9) + ".component.html";
+                if (options.moduleName)
+                    return "/src/" + options.moduleName + "/components/" + componentTemplateFileName;
+                return "/src/" + ngX.appModuleName + "/components/" + componentTemplateFileName;
+            }
+        }
     };
 })(ngX || (ngX = {}));
 
@@ -644,11 +695,14 @@ var ngX;
                                 moduleName: arguments[1].moduleName,
                                 componentName: arguments[1].componentName
                             });
-                        arguments[1].resolve = {
-                            routeData: ["routeResolverService", function (routeResolverService) {
+                        arguments[1].resolve = arguments[1].resolve || {};
+                        angular.extend(arguments[1].resolve, {
+                            routeData: [
+                                "routeResolverService", function (routeResolverService) {
                                     return routeResolverService.resolve(path);
-                                }]
-                        };
+                                }
+                            ]
+                        });
                     }
                     whenFn.apply($routeProvider, arguments);
                     return $routeProvider;
@@ -662,7 +716,7 @@ var ngX;
                         instance.onInit();
                 });
                 $rootScope.$on("$routeChangeStart", function (event, next, current) {
-                    var instance = current && current.controllerAs ? current.scope[current.controllerAs] : null;
+                    var instance = current && current.controllerAs && current.scope ? current.scope[current.controllerAs] : null;
                     if (instance && instance.canDeactivate && !instance.deactivated) {
                         event.preventDefault();
                         instance.canDeactivate().then(function (canDeactivate) {

@@ -67,10 +67,10 @@
     <Content Include="examples\hi\index.html" />
     <Content Include="examples\hi\quinntynebrown.jpg" />
     <Content Include="examples\polymerStyle\index.html" />
-    <Content Include="package.json" />
     <Content Include="dist\ngX.min.js.map">
       <DependentUpon>ngX.min.js</DependentUpon>
     </Content>
+    <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -101,6 +101,7 @@
     <TypeScriptCompile Include="src\ngX\components\rotator.ts" />
     <TypeScriptCompile Include="src\ngX\ngX.d.ts" />
     <TypeScriptCompile Include="src\ngX\ngX.module.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\apiEndpointProvider.ts" />
     <TypeScriptCompile Include="src\ngX\providers\appModuleName.ts" />
     <TypeScriptCompile Include="src\ngX\providers\component.ts" />
     <TypeScriptCompile Include="src\ngX\providers\configure.ts" />
