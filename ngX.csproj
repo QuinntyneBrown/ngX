@@ -70,6 +70,8 @@
     <Content Include="dist\ngX.min.js.map">
       <DependentUpon>ngX.min.js</DependentUpon>
     </Content>
+    <Content Include="examples\routeReload\listDetail.component.html" />
+    <Content Include="examples\routeReload\index.html" />
     <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

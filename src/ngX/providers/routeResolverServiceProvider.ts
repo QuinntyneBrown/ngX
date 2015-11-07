@@ -136,6 +136,7 @@
                     arguments[1].templateUrl = arguments[1].componentTemplateUrl || arguments[1].templateUrl;
                     arguments[1].controller = arguments[1].componentName || arguments[1].controller;
                     arguments[1].controllerAs = "vm";
+                    arguments[1].reloadOnSearch = arguments[1].reloadOnSearch || false; 
 
                     if (arguments[1].componentName && !arguments[1].templateUrl)
                         arguments[1].templateUrl = ngX.getTemplateUrlFromComponentName({

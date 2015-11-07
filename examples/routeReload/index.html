@@ -1,0 +1,58 @@
+﻿﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Component LifeCycle</title>
+</head>
+<body data-ng-app="app">
+    <app-header></app-header>
+    <div data-ng-view="">
+        
+    </div>
+    <script src="../../node_modules/angular/angular.min.js"></script>
+    <script src="../../node_modules/angular-route/angular-route.min.js"></script>
+    <script src="../../dist/ngX.js"></script>
+    <script>
+        angular.module("app", ["ngX"])
+            .config(["$routeProvider", function ($routeProvider) {
+                $routeProvider.when("/", {
+                    componentName: "listDetailComponent",
+                    componentTemplateUrl: "/examples/routeReload/listDetail.component.html"
+                });
+
+                $routeProvider.when("/listDetail", {
+                    componentName: "listDetailComponent",
+                    componentTemplateUrl: "/examples/routeReload/listDetail.component.html"
+                });
+
+            }]);
+
+
+
+        function ListDetailComponent($location) {
+
+
+            return {
+                loadedDateTime: Date.now()
+            }
+        }
+
+        ngX.Component({
+            component: ListDetailComponent,
+            providers:["$location"]
+        });
+
+        ngX.Component({
+            selector: "app-header",
+            template: [
+                "<div>",
+                "<a href='#/listDetail?id=1'>1</a>",
+                "<a href='#/listDetail?id=2'>2</a>",
+                "<a href='#/listDetail?id=3'>3</a>",
+                "</div>"
+            ].join(" ")
+        });
+
+
+    </script>
+</body>
+</html>
