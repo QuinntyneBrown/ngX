@@ -278,9 +278,15 @@ var ngX;
                             if (scope.vm && scope.vm.onInit)
                                 scope.vm.onInit();
                             scope.$on("$routeUpdate", function () {
-                                if (scope.vm && scope.vm.onUpdate)
-                                    scope.vm.onUpdate();
+                                if (scope.vm && scope.vm.onRouteUpdate)
+                                    scope.vm.onRouteUpdate();
                             });
+                            if (scope.vm && scope.vm.onVmUpdate) {
+                                document.addEventListener("vmUpdate", scope.vm.onVmUpdate);
+                                scope.$on("$destroy", function () {
+                                    document.removeEventListener("vmUpdate", scope.vm.onVmUpdate);
+                                });
+                            }
                         }
                     };
                 };
@@ -734,12 +740,22 @@ var ngX;
                     return $routeProvider;
                 };
             }])
-            .run(["$injector", "$location", "$rootScope", function ($injector, $location, $rootScope) {
+            .run(["$injector", "$location", "$rootScope", "fire", function ($injector, $location, $rootScope, fire) {
                 $rootScope.$on("$viewContentLoaded", function () {
                     var $route = $injector.get("$route");
                     var instance = $route.current.scope[$route.current.controllerAs];
                     if (instance.onInit)
                         instance.onInit();
+                    instance.onChildUpdated = function (event) {
+                        fire(document, "vmUpdate", {
+                            model: event.model,
+                            action: event.action
+                        });
+                    };
+                    document.addEventListener("modelUpdate", instance.onChildUpdated);
+                    $route.current.scope.$on("$destroy", function () {
+                        document.removeEventListener("modelUpdate", instance.onChildrenUpdated);
+                    });
                 });
                 $rootScope.$on("$routeChangeStart", function (event, next, current) {
                     var instance = current && current.controllerAs && current.scope ? current.scope[current.controllerAs] : null;

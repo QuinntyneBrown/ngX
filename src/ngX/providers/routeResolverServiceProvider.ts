@@ -158,11 +158,24 @@
                 return $routeProvider;
             }
         }])
-        .run(["$injector", "$location", "$rootScope", ($injector: ng.auto.IInjectorService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService) => {
+        .run(["$injector", "$location", "$rootScope", "fire", ($injector: ng.auto.IInjectorService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService, fire:any) => {
             $rootScope.$on("$viewContentLoaded", () => {
                 var $route: any = $injector.get("$route");
                 var instance = $route.current.scope[$route.current.controllerAs];
                 if (instance.onInit) instance.onInit();
+
+                instance.onChildUpdated = (event:any) => {
+                    fire(document, "vmUpdate", {
+                        model: event.model,
+                        action: event.action
+                    });
+                }
+
+                document.addEventListener("modelUpdate", instance.onChildUpdated);
+
+                $route.current.scope.$on("$destroy", () => {
+                    document.removeEventListener("modelUpdate", instance.onChildrenUpdated);
+                });
             });
 
             $rootScope.$on("$routeChangeStart", (event, next, current) => {

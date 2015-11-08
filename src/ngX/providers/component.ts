@@ -108,9 +108,18 @@
                                 scope.vm.onInit();
 
                             scope.$on("$routeUpdate", function() {
-                                if (scope.vm && scope.vm.onUpdate)
-                                    scope.vm.onUpdate();
+                                if (scope.vm && scope.vm.onRouteUpdate)
+                                    scope.vm.onRouteUpdate();
                             });
+
+                            if (scope.vm && scope.vm.onVmUpdate) {
+                                document.addEventListener("vmUpdate", scope.vm.onVmUpdate);
+
+                                scope.$on("$destroy", () => {
+                                    document.removeEventListener("vmUpdate", scope.vm.onVmUpdate);
+                                });
+                            }
+                            
                         }
                     }
                 }
