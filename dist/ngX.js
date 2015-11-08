@@ -3,14 +3,6 @@ var ngX;
     ngX.componentStyles = {};
     ngX.isBootstrapped = false;
 })(ngX || (ngX = {}));
-function isAngularPresent() {
-    return typeof angular === 'object';
-}
-if (isAngularPresent() === false) {
-    var scriptTag = document.createElement('script');
-    scriptTag.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js');
-    document.head.appendChild(scriptTag);
-}
 try {
     angular.module("ngRoute");
     angular.module("ngX", ["ngRoute"]);
@@ -259,12 +251,20 @@ var ngX;
                                 });
                             if (!ngX.componentStyles[options.selector]) {
                                 ngX.componentStyles[options.selector] = true;
-                                document.addEventListener("DOMContentLoaded", onDocumentLoad);
-                                function onDocumentLoad() {
+                                if (document.readyState === "complete") {
+                                    addStyleTagToHead();
+                                }
+                                else {
+                                    document.addEventListener("DOMContentLoaded", onDocumentLoad);
+                                    function onDocumentLoad() {
+                                        addStyleTagToHead();
+                                        document.removeEventListener("DOMContentLoaded", onDocumentLoad);
+                                    }
+                                }
+                                function addStyleTagToHead() {
                                     var head = document.getElementsByTagName("head");
                                     var augmentedJQuery = angular.element("<style>" + styles + "</style>");
                                     head[0].appendChild(augmentedJQuery[0]);
-                                    document.removeEventListener("DOMContentLoaded", onDocumentLoad);
                                 }
                             }
                         },

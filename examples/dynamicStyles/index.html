@@ -18,12 +18,11 @@
                 };
             }
 
-            GreetingComponent.styles = [
-                "h1.greeting { font-weight: 100; }"
-            ].join(" ");
-
             ngX.Component({
                 selector: "greeting",
+                styles : [
+                "h1.greeting { font-weight: 100; }"
+                ].join(" "),
                 component: GreetingComponent,
                 template: [
                     "<h1 class='greeting'>",

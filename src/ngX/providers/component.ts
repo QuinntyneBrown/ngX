@@ -86,13 +86,25 @@
 
                             if (!componentStyles[options.selector]) {
                                 componentStyles[options.selector] = true;
-                                document.addEventListener("DOMContentLoaded", onDocumentLoad);
-                                function onDocumentLoad() {
+
+                                if (document.readyState === "complete") {
+                                    addStyleTagToHead();
+                                }
+                                else {
+                                    document.addEventListener("DOMContentLoaded", onDocumentLoad);
+                                    function onDocumentLoad() {
+                                        addStyleTagToHead();
+                                        document.removeEventListener("DOMContentLoaded", onDocumentLoad);
+                                    }
+                                }
+
+                                function addStyleTagToHead() {
                                     var head = document.getElementsByTagName("head");
                                     var augmentedJQuery = angular.element("<style>" + styles + "</style>");
                                     head[0].appendChild(augmentedJQuery[0]);
-                                    document.removeEventListener("DOMContentLoaded", onDocumentLoad);
                                 }
+
+
                             }
                         },
                         post: function (scope: any) {
