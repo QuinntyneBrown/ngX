@@ -107,6 +107,8 @@
     <TypeScriptCompile Include="src\ngX\providers\dataService.ts" />
     <TypeScriptCompile Include="src\ngX\providers\debounce.ts" />
     <TypeScriptCompile Include="src\ngX\providers\fire.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\formFactor.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\getFormFactor.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getFunctionName.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getHtml.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getTemplateUrlFromComponentName.ts" />
@@ -114,6 +116,7 @@
     <TypeScriptCompile Include="src\ngX\providers\guid.ts" />
     <TypeScriptCompile Include="src\ngX\providers\model.ts" />
     <TypeScriptCompile Include="src\ngX\providers\renderedNodes.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\requestCount.ts" />
     <TypeScriptCompile Include="src\ngX\providers\routeResolverServiceProvider.ts" />
     <TypeScriptCompile Include="src\ngX\providers\translateX.ts" />
     <TypeScriptCompile Include="src\ngX\providers\translateXAsync.ts" />

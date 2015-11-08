@@ -1,5 +1,9 @@
 ﻿ declare module ngX {
  
+     export interface IGetFormFactor {
+         (): formFactor;
+     }
+
      export interface IGetX {
          (element: HTMLElement): number;
      }

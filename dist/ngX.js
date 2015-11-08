@@ -321,6 +321,35 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    (function (formFactor) {
+        formFactor[formFactor["mobile"] = 0] = "mobile";
+        formFactor[formFactor["smallTablet"] = 1] = "smallTablet";
+        formFactor[formFactor["tablet"] = 2] = "tablet";
+        formFactor[formFactor["desktop"] = 3] = "desktop";
+    })(ngX.formFactor || (ngX.formFactor = {}));
+    var formFactor = ngX.formFactor;
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=formFactor.js.map
+
+var ngX;
+(function (ngX) {
+    "use strict";
+    var getFormFactor = function () {
+        var width = window.innerWidth;
+        if (width <= 768)
+            return ngX.formFactor.mobile;
+        if (width <= 1064)
+            return ngX.formFactor.tablet;
+        return ngX.formFactor.desktop;
+    };
+    angular.module("ngX").value("getFormFactor", getFormFactor);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=getFormFactor.js.map
+
+var ngX;
+(function (ngX) {
     ngX.getFunctionName = function (fun) {
         var ret = fun.toString();
         ret = ret.substr('function '.length);
@@ -384,8 +413,17 @@ var ngX;
 
 var ngX;
 (function (ngX) {
-    ngX.newGuid = function () {
+    //http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+    ngX.guid = function () {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
     };
+    angular.module("ngX").value("guid", ngX.guid);
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=guid.js.map
@@ -489,6 +527,52 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=renderedNodes.js.map
+
+var ngX;
+(function (ngX) {
+    "use strict";
+    /**
+    * @name RequestCounter
+    * @module ngX
+    */
+    var RequestCounter = (function () {
+        function RequestCounter($q) {
+            var _this = this;
+            this.$q = $q;
+            this.requests = 0;
+            this.request = function (config) {
+                _this.requests += 1;
+                return _this.$q.when(config);
+            };
+            this.requestError = function (error) {
+                _this.requests -= 1;
+                return _this.$q.reject(error);
+            };
+            this.response = function (response) {
+                _this.requests -= 1;
+                return _this.$q.when(response);
+            };
+            this.responseError = function (error) {
+                _this.requests -= 1;
+                return _this.$q.reject(error);
+            };
+            this.getRequestCount = function () {
+                return _this.requests;
+            };
+        }
+        RequestCounter.createInstance = function ($q) { return new RequestCounter($q); };
+        return RequestCounter;
+    })();
+    ngX.RequestCounter = RequestCounter;
+    angular.module("ngX").factory("requestCounter", ["$q", RequestCounter.createInstance])
+        .config([
+        "$httpProvider", function ($httpProvider) {
+            $httpProvider.interceptors.push("requestCounter");
+        }
+    ]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=requestCount.js.map
 
 var ngX;
 (function (ngX) {
