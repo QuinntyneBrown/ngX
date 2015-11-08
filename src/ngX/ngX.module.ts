@@ -1,6 +1,5 @@
 ﻿module ngX {
     export var componentStyles = {};
-
     export var isBootstrapped = false;
 }
 
@@ -12,4 +11,3 @@ catch(error){
     angular.module("ngX", []); 
 }
 
-angular.module("ngX.components", ["ngX"]);

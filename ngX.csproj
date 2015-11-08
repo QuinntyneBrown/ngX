@@ -98,8 +98,6 @@
   <ItemGroup />
   <ItemGroup>
     <TypeScriptCompile Include="examples\basic\index.ts" />
-    <TypeScriptCompile Include="src\ngX\components\hamburgerButton.ts" />
-    <TypeScriptCompile Include="src\ngX\components\rotator.ts" />
     <TypeScriptCompile Include="src\ngX\ngX.d.ts" />
     <TypeScriptCompile Include="src\ngX\ngX.module.ts" />
     <TypeScriptCompile Include="src\ngX\providers\apiEndpointProvider.ts" />
