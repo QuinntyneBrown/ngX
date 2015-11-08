@@ -91,10 +91,10 @@
                                     addStyleTagToHead();
                                 }
                                 else {
-                                    document.addEventListener("DOMContentLoaded", onDocumentLoad);
+                                    window.addEventListener("DOMContentLoaded", onDocumentLoad);
                                     function onDocumentLoad() {
                                         addStyleTagToHead();
-                                        document.removeEventListener("DOMContentLoaded", onDocumentLoad);
+                                        window.removeEventListener("DOMContentLoaded", onDocumentLoad);
                                     }
                                 }
 
