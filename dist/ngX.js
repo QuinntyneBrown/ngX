@@ -176,6 +176,11 @@ var ngX;
                                     document.removeEventListener("vmUpdate", scope.vm.onVmUpdate);
                                 });
                             }
+                            if (scope.vm.dispose) {
+                                scope.$on("$destroy", function () {
+                                    scope.vm.dispose();
+                                });
+                            }
                         }
                     };
                 };
@@ -392,6 +397,7 @@ var ngX;
                 return "/src/" + ngX.appModuleName + "/components/" + componentTemplateFileName;
             }
         }
+        return "";
     };
 })(ngX || (ngX = {}));
 

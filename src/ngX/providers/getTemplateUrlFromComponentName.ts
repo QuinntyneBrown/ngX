@@ -11,9 +11,6 @@
                 return "/src/" + ngX.appModuleName + "/components/" + componentTemplateFileName;
             }
         }
-
-        
-        
-
+        return "";
     }
 } 

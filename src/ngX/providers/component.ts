@@ -131,6 +131,13 @@
                                     document.removeEventListener("vmUpdate", scope.vm.onVmUpdate);
                                 });
                             }
+
+                            if (scope.vm.dispose) {
+                                scope.$on("$destroy", () => {
+                                    scope.vm.dispose();
+                                });
+                            }
+                                
                             
                         }
                     }
