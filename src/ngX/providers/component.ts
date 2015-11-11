@@ -116,6 +116,12 @@
 
                             }
 
+                            if (options.transclude && scope.vm.$transclude) {
+                                scope.vm.$transclude(scope, (clone: ng.IAugmentedJQuery) => {
+                                    scope.vm.clone = clone;
+                                });
+                            }
+
                             if (scope.vm && scope.vm.onInit)
                                 scope.vm.onInit();
 

@@ -164,6 +164,11 @@ var ngX;
                                         scope[prop] = options.properties[prop].value();
                                 }
                             }
+                            if (options.transclude && scope.vm.$transclude) {
+                                scope.vm.$transclude(scope, function (clone) {
+                                    scope.vm.clone = clone;
+                                });
+                            }
                             if (scope.vm && scope.vm.onInit)
                                 scope.vm.onInit();
                             scope.$on("$routeUpdate", function () {
@@ -352,6 +357,30 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=getFormFactor.js.map
+
+var ngX;
+(function (ngX) {
+    "use strict";
+    angular.module("ngX").value("getFromUrlSync", function (options) {
+        var responseText = "";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", options.url, false);
+        xhr.onload = function (e) {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    responseText = xhr.responseText;
+                }
+                else {
+                    console.error(xhr.statusText);
+                }
+            }
+        };
+        xhr.send(null);
+        return responseText;
+    });
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=getFromUrlSync.js.map
 
 var ngX;
 (function (ngX) {

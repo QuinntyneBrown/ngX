@@ -112,6 +112,7 @@
     <TypeScriptCompile Include="src\ngX\providers\getFunctionName.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getHtml.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getTemplateUrlFromComponentName.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\getFromUrlSync.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getX.ts" />
     <TypeScriptCompile Include="src\ngX\providers\guid.ts" />
     <TypeScriptCompile Include="src\ngX\providers\model.ts" />
