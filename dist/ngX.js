@@ -175,6 +175,16 @@ var ngX;
                                 if (scope.vm && scope.vm.onRouteUpdate)
                                     scope.vm.onRouteUpdate();
                             });
+                            if (scope.vm && scope.vm.onKeyDown) {
+                                document.addEventListener("keydown", scope.vm.onKeyDown);
+                                scope.$on("$destroy", function () {
+                                    document.removeEventListener("keydown", scope.vm.onKeyDown);
+                                });
+                            }
+                            scope.$on("$locationChangeSuccess", function () {
+                                if (scope.vm && scope.vm.onLocationChangeSuccess)
+                                    scope.vm.onLocationChangeSuccess();
+                            });
                             if (scope.vm && scope.vm.onVmUpdate) {
                                 document.addEventListener("vmUpdate", scope.vm.onVmUpdate);
                                 scope.$on("$destroy", function () {

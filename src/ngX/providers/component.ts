@@ -130,6 +130,19 @@
                                     scope.vm.onRouteUpdate();
                             });
 
+                            if (scope.vm && scope.vm.onKeyDown) {
+                                document.addEventListener("keydown", scope.vm.onKeyDown);
+
+                                scope.$on("$destroy", () => {
+                                    document.removeEventListener("keydown", scope.vm.onKeyDown);
+                                });
+                            }
+
+                            scope.$on("$locationChangeSuccess",  () => {
+                                if (scope.vm && scope.vm.onLocationChangeSuccess)
+                                    scope.vm.onLocationChangeSuccess();
+                            });
+
                             if (scope.vm && scope.vm.onVmUpdate) {
                                 document.addEventListener("vmUpdate", scope.vm.onVmUpdate);
 
