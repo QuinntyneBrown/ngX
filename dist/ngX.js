@@ -158,6 +158,19 @@ var ngX;
                             }
                         },
                         post: function (scope) {
+                            var $injector = angular.injector(['ngX']);
+                            var debounce = $injector.get("debounce");
+                            var currentUser = $injector.get("currentUser");
+                            if (scope && scope.vm) {
+                                scope.vm.currentUser = currentUser;
+                            }
+                            document.addEventListener("resize", function () {
+                                debounce(function () {
+                                    if (scope.vm && scope.vm.onResize) {
+                                        scope.vm.onResize();
+                                    }
+                                }, 300)();
+                            });
                             if (options.properties) {
                                 for (var prop in options.properties) {
                                     if (options.properties[prop].value)
@@ -248,6 +261,10 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=configure.js.map
+
+
+
+//# sourceMappingURL=currentUser.js.map
 
 var ngX;
 (function (ngX) {
@@ -472,6 +489,18 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=guid.js.map
+
+!DOCTYPE;
+html >
+    /title>
+    < meta;
+charset = "utf-8" /  >
+    /head>
+    < body >
+    /body>
+    < /html>;
+
+//# sourceMappingURL=localStorageService.js.map
 
 // add model registration with change notifications firing after save method or update method  
 
@@ -758,7 +787,7 @@ var ngX;
                     return $routeProvider;
                 };
             }])
-            .run(["$injector", "$location", "$rootScope", "fire", function ($injector, $location, $rootScope, fire) {
+            .run(["$injector", "$location", "$rootScope", "$route", "fire", function ($injector, $location, $rootScope, $route, fire) {
                 $rootScope.$on("$viewContentLoaded", function () {
                     var $route = $injector.get("$route");
                     var instance = $route.current.scope[$route.current.controllerAs];
@@ -776,6 +805,16 @@ var ngX;
                     });
                 });
                 $rootScope.$on("$routeChangeStart", function (event, next, current) {
+                    $rootScope["isNavigating"] = true;
+                    /**
+                    * if routes contain /login then assume every route authorization is required except for /login
+                    */
+                    if ($location.path() === "/login") {
+                    }
+                    if ($route.routes["/login"]) {
+                    }
+                    else {
+                    }
                     var instance = current && current.controllerAs && current.scope ? current.scope[current.controllerAs] : null;
                     if (instance && instance.canDeactivate && !instance.deactivated) {
                         event.preventDefault();
@@ -798,6 +837,18 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=routeResolverServiceProvider.js.map
+
+var ngX;
+(function (ngX) {
+    var SecurityManager = (function () {
+        function SecurityManager() {
+        }
+        return SecurityManager;
+    })();
+    angular.module("ngX").service("securityManager", [SecurityManager]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=securityManager.js.map
 
 var ngX;
 (function (ngX) {

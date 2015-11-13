@@ -158,7 +158,7 @@
                 return $routeProvider;
             }
         }])
-        .run(["$injector", "$location", "$rootScope", "fire", ($injector: ng.auto.IInjectorService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService, fire:any) => {
+        .run(["$injector", "$location", "$rootScope", "$route", "fire", ($injector: ng.auto.IInjectorService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService, $route:ng.route.IRouteService, fire:any) => {
             $rootScope.$on("$viewContentLoaded", () => {
                 var $route: any = $injector.get("$route");
                 var instance = $route.current.scope[$route.current.controllerAs];
@@ -179,6 +179,30 @@
             });
 
             $rootScope.$on("$routeChangeStart", (event, next, current) => {
+
+                $rootScope["isNavigating"] = true;
+                /**
+                * if routes contain /login then assume every route authorization is required except for /login
+                */
+
+                if ($location.path() === "/login") {
+
+                }
+
+                if ($route.routes["/login"]) {
+
+                    //if (next && next["authorizationRequired"]) {
+                    //    if (securityManager.token == null || securityManager.tokenExpiryDate == null || Date.now() > securityManager.tokenExpiryDate) {
+                    //        rootScope.$evalAsync(() => {
+                    //            loginRedirect.redirectToLogin();
+                    //        });
+                    //    }
+                    //}
+
+                } else {
+
+                }
+
                 var instance = current && current.controllerAs && current.scope ? current.scope[current.controllerAs] : null;
                 if (instance && instance.canDeactivate && !instance.deactivated) {
                     event.preventDefault();

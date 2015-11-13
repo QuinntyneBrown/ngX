@@ -21,6 +21,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TypeScriptToolsVersion>1.6</TypeScriptToolsVersion>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,6 +60,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dist\ngX.js" />
     <Content Include="examples\es5\index.html" />
     <Content Include="examples\componentLifeCycle\about.component.html" />
     <Content Include="examples\componentLifeCycle\home.component.html" />
@@ -95,7 +97,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="examples\authorizedRoute\" />
+  </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="examples\basic\index.ts" />
     <TypeScriptCompile Include="src\ngX\ngX.d.ts" />
@@ -119,6 +123,7 @@
     <TypeScriptCompile Include="src\ngX\providers\renderedNodes.ts" />
     <TypeScriptCompile Include="src\ngX\providers\requestCount.ts" />
     <TypeScriptCompile Include="src\ngX\providers\routeResolverServiceProvider.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\securityManager.ts" />
     <TypeScriptCompile Include="src\ngX\providers\translateX.ts" />
     <TypeScriptCompile Include="src\ngX\providers\translateXAsync.ts" />
     <TypeScriptCompile Include="typings\angularjs\angular-route.d.ts" />

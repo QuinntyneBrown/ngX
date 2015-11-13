@@ -108,6 +108,25 @@
                             }
                         },
                         post: function (scope: any) {
+
+                            var $injector = angular.injector(['ngX'])
+                            var debounce:Function =<any>$injector.get("debounce");
+                            var currentUser: Function = <any>$injector.get("currentUser");
+
+                            if (scope && scope.vm) {
+                                scope.vm.currentUser = currentUser;
+                            }
+
+                            document.addEventListener("resize", () => {
+                                debounce(() => {
+                                    if (scope.vm && scope.vm.onResize) {
+                                        scope.vm.onResize();
+                                    }
+                                }, 300)();
+                            });
+
+                            
+
                             if (options.properties) {
                                 for (var prop in options.properties) {
                                     if (options.properties[prop].value)
@@ -124,6 +143,7 @@
 
                             if (scope.vm && scope.vm.onInit)
                                 scope.vm.onInit();
+
 
                             scope.$on("$routeUpdate", function() {
                                 if (scope.vm && scope.vm.onRouteUpdate)
