@@ -898,11 +898,32 @@ var ngX;
 var ngX;
 (function (ngX) {
     var SecurityManager = (function () {
-        function SecurityManager() {
+        function SecurityManager(localStorageManager) {
+            this.localStorageManager = localStorageManager;
         }
+        Object.defineProperty(SecurityManager.prototype, "token", {
+            get: function () {
+                return this.localStorageManager.get({ name: "token" });
+            },
+            set: function (value) {
+                this.localStorageManager.set({ name: "token", value: value });
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(SecurityManager.prototype, "currentUser", {
+            get: function () {
+                return this.localStorageManager.get({ name: "currentUser" });
+            },
+            set: function (value) {
+                this.localStorageManager.set({ name: "currentUser", value: value });
+            },
+            enumerable: true,
+            configurable: true
+        });
         return SecurityManager;
     })();
-    angular.module("ngX").service("securityManager", [SecurityManager]);
+    angular.module("ngX").service("securityManager", ["localStorageManager", SecurityManager]);
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=securityManager.js.map
