@@ -158,18 +158,18 @@ var ngX;
                             }
                         },
                         post: function (scope) {
-                            var $injector = angular.injector(['ngX']);
+                            var $injector = angular.element(document.getElementsByTagName("body")[0]).injector();
                             var debounce = $injector.get("debounce");
-                            var currentUser = $injector.get("currentUser");
+                            var securityManager = $injector.get("securityManager");
                             if (scope && scope.vm) {
-                                scope.vm.currentUser = currentUser;
+                                scope.vm.currentUser = securityManager.currentUser;
                             }
-                            document.addEventListener("resize", function () {
-                                debounce(function () {
-                                    if (scope.vm && scope.vm.onResize) {
+                            window.addEventListener("resize", function () {
+                                if (scope.vm && scope.vm.onResize) {
+                                    debounce(function () {
                                         scope.vm.onResize();
-                                    }
-                                }, 300)();
+                                    }, 1000)();
+                                }
                             });
                             if (options.properties) {
                                 for (var prop in options.properties) {

@@ -109,20 +109,23 @@
                         },
                         post: function (scope: any) {
 
-                            var $injector = angular.injector(['ngX'])
+                            var $injector = angular.element(document.getElementsByTagName("body")[0]).injector();
+                            
                             var debounce:Function =<any>$injector.get("debounce");
-                            var currentUser: Function = <any>$injector.get("currentUser");
+                            var securityManager: any = <any>$injector.get("securityManager");
 
                             if (scope && scope.vm) {
-                                scope.vm.currentUser = currentUser;
+                                scope.vm.currentUser = securityManager.currentUser;
                             }
 
-                            document.addEventListener("resize", () => {
-                                debounce(() => {
-                                    if (scope.vm && scope.vm.onResize) {
+                            window.addEventListener("resize", function () {
+                                if (scope.vm && scope.vm.onResize) {
+                                    debounce(() => {
+
                                         scope.vm.onResize();
-                                    }
-                                }, 300)();
+
+                                    }, 1000)();
+                                }
                             });
 
                             

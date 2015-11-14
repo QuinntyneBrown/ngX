@@ -13,14 +13,26 @@
 
         function GreetingComponent() {
             var greeting = "ngX";
+
+            
             return {
-                greeting: greeting
+                greeting: greeting,
+                onInit: function () {
+                    console.log("init");
+                },
+                onResize: function () {
+                    console.log("resize");
+                },
+                onKeyDown: function () {
+                    console.log("keydown");
+                }
             };
         }
 
         ngX.Component({
             selector: "greeting",
             component: GreetingComponent,
+            styles: [" h1 { color: red;}"].join(" /n "),
             template: [
                 "<h1>",
                 "{{ ::vm.greeting }}",
