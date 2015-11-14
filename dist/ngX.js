@@ -844,7 +844,7 @@ var ngX;
                     return $routeProvider;
                 };
             }])
-            .run(["$injector", "$location", "$rootScope", "$route", "fire", function ($injector, $location, $rootScope, $route, fire) {
+            .run(["$injector", "$location", "$rootScope", "$route", "fire", "securityManager", function ($injector, $location, $rootScope, $route, fire, securityManager) {
                 $rootScope.$on("$viewContentLoaded", function () {
                     var $route = $injector.get("$route");
                     var instance = $route.current.scope[$route.current.controllerAs];
@@ -861,12 +861,21 @@ var ngX;
                         document.removeEventListener("modelUpdate", instance.onChildrenUpdated);
                     });
                 });
+                $rootScope.$on("$routeChangeStart", function (currentRoute, nextRoute) {
+                    if (nextRoute.authorizationRequired && !securityManager.token) {
+                        $location.path("/login");
+                    }
+                    if ($location.path() === "/login") {
+                        securityManager.token = null;
+                    }
+                });
                 $rootScope.$on("$routeChangeStart", function (event, next, current) {
                     $rootScope["isNavigating"] = true;
                     /**
                     * if routes contain /login then assume every route authorization is required except for /login
                     */
                     if ($location.path() === "/login") {
+                        securityManager.token = null;
                     }
                     if ($route.routes["/login"]) {
                     }
@@ -906,7 +915,7 @@ var ngX;
                 return this.localStorageManager.get({ name: "token" });
             },
             set: function (value) {
-                this.localStorageManager.set({ name: "token", value: value });
+                this.localStorageManager.put({ name: "token", value: value });
             },
             enumerable: true,
             configurable: true
@@ -916,7 +925,7 @@ var ngX;
                 return this.localStorageManager.get({ name: "currentUser" });
             },
             set: function (value) {
-                this.localStorageManager.set({ name: "currentUser", value: value });
+                this.localStorageManager.put({ name: "currentUser", value: value });
             },
             enumerable: true,
             configurable: true

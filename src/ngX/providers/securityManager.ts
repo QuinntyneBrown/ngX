@@ -12,7 +12,7 @@
         }
 
         public set token(value: any) {
-            this.localStorageManager.set({ name: "token", value: value });
+            this.localStorageManager.put({ name: "token", value: value });
         }
 
         public get currentUser() {
@@ -20,7 +20,7 @@
         }
 
         public set currentUser(value: any) {
-            this.localStorageManager.set({ name: "currentUser", value: value });
+            this.localStorageManager.put({ name: "currentUser", value: value });
         }
     }
 
