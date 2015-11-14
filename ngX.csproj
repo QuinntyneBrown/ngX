@@ -68,6 +68,7 @@
     <Content Include="examples\dynamicStyles\index.html" />
     <Content Include="examples\hi\index.html" />
     <Content Include="examples\hi\quinntynebrown.jpg" />
+    <Content Include="examples\localStorageManager\index.html" />
     <Content Include="examples\polymerStyle\index.html" />
     <Content Include="dist\ngX.min.js.map">
       <DependentUpon>ngX.min.js</DependentUpon>
@@ -92,6 +93,7 @@
     <Content Include="karma.conf.js" />
     <Content Include="node_modules\angular-route\angular-route.min.js" />
     <Content Include="node_modules\angular\angular.min.js" />
+    <TypeScriptCompile Include="src\ngX\providers\localStorageManager.ts" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +110,7 @@
     <TypeScriptCompile Include="src\ngX\providers\appModuleName.ts" />
     <TypeScriptCompile Include="src\ngX\providers\component.ts" />
     <TypeScriptCompile Include="src\ngX\providers\configure.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\currentUser.ts" />
     <TypeScriptCompile Include="src\ngX\providers\dataService.ts" />
     <TypeScriptCompile Include="src\ngX\providers\debounce.ts" />
     <TypeScriptCompile Include="src\ngX\providers\fire.ts" />

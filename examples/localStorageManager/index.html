@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Local Storage Example</title>
+</head>
+<body data-ng-app="lsApp">
+
+    <p>This should increment on refereshes:</p>
+    <h1>{{ run }}</h1>
+
+    <script src="../../node_modules/angular/angular.js"></script>
+    <script src="../../dist/ngX.js"></script>
+    <script>
+
+        angular.module("lsApp", ["ngX"]).run(["$rootScope", "localStorageManager", function ($rootScope, localStorageManager) {
+            var run = localStorageManager.get({ name: "run" }) || 0;
+
+            run++;
+            $rootScope.run = run;
+
+            localStorageManager.put({ name: "run", value: run });
+
+        }]);
+
+    </script>
+</body>
+</html>
