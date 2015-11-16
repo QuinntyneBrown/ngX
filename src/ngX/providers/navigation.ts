@@ -16,7 +16,14 @@
         public goBack = () => {            
             this.$location.path(this.urls.pop());
         }
+
+        public hasHistory = () => {
+            return this.urls.length > 0;
+        }
     }
 
-    angular.module("ngX").service("navigation", ["$location", "$rootScope", "localStorageManager", navigation]);
+    angular.module("ngX")
+        .service("navigation", ["$location", "$rootScope", "localStorageManager", navigation])
+        .run(["navigation", (navigation) => { }]);
+
 }
