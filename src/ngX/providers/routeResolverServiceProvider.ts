@@ -1,6 +1,10 @@
-﻿module ngX {
+﻿//http://odetocode.com/blogs/scott/archive/2014/03/24/dynamic-routes-with-angularjs.aspx
+
+module ngX {
 
     "use strict";
+
+    export var routeConfigs = [];
 
     /**
     * @name RouteResolverServiceProvider
@@ -139,6 +143,7 @@
 
                 var whenFn = $routeProvider.when;
                 $routeProvider.when = function () {
+
                     if (arguments[1] && arguments[0]) {
                         var path = arguments[0];
                         arguments[1].templateUrl = arguments[1].componentTemplateUrl || arguments[1].templateUrl;
@@ -161,6 +166,12 @@
                             ]
                         });
                     }
+
+                    routeConfigs.push({
+                        when: arguments[0],
+                        config: arguments[1]
+                    });
+
                     whenFn.apply($routeProvider, arguments);
 
                     return $routeProvider;

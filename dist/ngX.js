@@ -228,6 +228,19 @@ var ngX;
                 .controller(options.componentName || ngX.getFunctionName(options.component), options.component);
             try {
                 angular.module("ngRoute");
+                if (options.template) {
+                    angular.module(options.module).config(["$routeProvider", function ($routeProvider) {
+                            var length = ngX.routeConfigs.length;
+                            for (var i = 0; i < length; i++) {
+                                var componentName = options.componentName || ngX.getFunctionName(options.component);
+                                if (ngX.routeConfigs[i].config.componentName && ngX.routeConfigs[i].config.componentName === componentName) {
+                                    ngX.routeConfigs[i].config.templateUrl = null;
+                                    ngX.routeConfigs[i].config.template = options.template;
+                                    $routeProvider.when(ngX.routeConfigs[i].when, ngX.routeConfigs[i].config);
+                                }
+                            }
+                        }]);
+                }
                 if (options.component.canActivate)
                     angular.module(options.module)
                         .config([
@@ -635,6 +648,9 @@ var ngX;
             this.goBack = function () {
                 _this.$location.path(_this.urls.pop());
             };
+            this.hasHistory = function () {
+                return _this.urls.length > 0;
+            };
             $rootScope.$on("$locationChangeSuccess", function () {
                 _this.urls.push($location.path());
             });
@@ -642,7 +658,9 @@ var ngX;
         return navigation;
     })();
     ngX.navigation = navigation;
-    angular.module("ngX").service("navigation", ["$location", "$rootScope", "localStorageManager", navigation]);
+    angular.module("ngX")
+        .service("navigation", ["$location", "$rootScope", "localStorageManager", navigation])
+        .run(["navigation", function (navigation) { }]);
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=navigation.js.map
@@ -789,9 +807,11 @@ var ngX;
 
 //# sourceMappingURL=requestCount.js.map
 
+//http://odetocode.com/blogs/scott/archive/2014/03/24/dynamic-routes-with-angularjs.aspx
 var ngX;
 (function (ngX) {
     "use strict";
+    ngX.routeConfigs = [];
     /**
     * @name RouteResolverServiceProvider
     * @module ngX
@@ -930,6 +950,10 @@ var ngX;
                             ]
                         });
                     }
+                    ngX.routeConfigs.push({
+                        when: arguments[0],
+                        config: arguments[1]
+                    });
                     whenFn.apply($routeProvider, arguments);
                     return $routeProvider;
                 };

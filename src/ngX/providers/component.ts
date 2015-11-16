@@ -209,8 +209,26 @@
             angular.module(options.module)
                 .controller(options.componentName || getFunctionName(options.component), options.component);
 
+
+
             try {
                 angular.module("ngRoute");
+
+                if (options.template) {
+                    angular.module(options.module).config(["$routeProvider", ($routeProvider) => {
+                        var length = ngX.routeConfigs.length;
+                        for (var i = 0; i < length; i++) {
+
+                            var componentName = options.componentName || getFunctionName(options.component);
+
+                            if (ngX.routeConfigs[i].config.componentName && ngX.routeConfigs[i].config.componentName === componentName) {
+                                routeConfigs[i].config.templateUrl = null;
+                                routeConfigs[i].config.template = options.template;
+                                $routeProvider.when(routeConfigs[i].when, routeConfigs[i].config);
+                            }
+                        }
+                    }]);
+                }
 
                 if (options.component.canActivate)
                     angular.module(options.module)
