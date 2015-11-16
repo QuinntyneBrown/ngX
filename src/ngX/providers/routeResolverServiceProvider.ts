@@ -121,106 +121,114 @@
     try {
         angular.module("ngRoute");
 
-    angular.module("ngX")
-        .provider("routeResolverService", [RouteResolverServiceProvider])
+        angular.module("ngX")
+            .provider("routeResolverService", [RouteResolverServiceProvider])
 
-    /**
-     * Attach the routeResolverService resolve method to every route
-     * Also enable syntax sugar to ease transition to Angular 2
-     */
-        .config(["$routeProvider", ($routeProvider: any) => {
-            var whenFn = $routeProvider.when;
-            $routeProvider.when = function () {
-                if (arguments[1] && arguments[0]) {
-                    var path = arguments[0];
-                    arguments[1].templateUrl = arguments[1].componentTemplateUrl || arguments[1].templateUrl;
-                    arguments[1].controller = arguments[1].componentName || arguments[1].controller;
-                    arguments[1].controllerAs = "vm";
-                    arguments[1].reloadOnSearch = arguments[1].reloadOnSearch || false; 
+        /**
+         * Attach the routeResolverService resolve method to every route
+         * Also enable syntax sugar to ease transition to Angular 2
+         */
+            .config(["$routeProvider", ($routeProvider: any) => {
 
-                    if (arguments[1].componentName && !arguments[1].templateUrl)
-                        arguments[1].templateUrl = ngX.getTemplateUrlFromComponentName({
-                            moduleName: arguments[1].moduleName,
-                            componentName: arguments[1].componentName
+                $routeProvider.buildFromUrl = (options: any) => {
+                    var routes = JSON.parse(ngX.getFromUrlSync({ url: options.url }));
+                    for (var i = 0; i < routes.length; i++) {
+                        $routeProvider.when(routes[i].when, routes[i].config);
+                    }
+                }
+
+                var whenFn = $routeProvider.when;
+                $routeProvider.when = function () {
+                    if (arguments[1] && arguments[0]) {
+                        var path = arguments[0];
+                        arguments[1].templateUrl = arguments[1].componentTemplateUrl || arguments[1].templateUrl;
+                        arguments[1].controller = arguments[1].componentName || arguments[1].controller;
+                        arguments[1].controllerAs = "vm";
+                        arguments[1].reloadOnSearch = arguments[1].reloadOnSearch || false;
+
+                        if (arguments[1].componentName && !arguments[1].templateUrl)
+                            arguments[1].templateUrl = ngX.getTemplateUrlFromComponentName({
+                                moduleName: arguments[1].moduleName,
+                                componentName: arguments[1].componentName
+                            });
+                        arguments[1].resolve = arguments[1].resolve || {};
+
+                        angular.extend(arguments[1].resolve, {
+                            routeData: [
+                                "routeResolverService", (routeResolverService: ngX.IRouteResolverService) => {
+                                    return routeResolverService.resolve(path);
+                                }
+                            ]
                         });
-                    arguments[1].resolve = arguments[1].resolve || {};
+                    }
+                    whenFn.apply($routeProvider, arguments);
 
-                    angular.extend(arguments[1].resolve, {
-                        routeData: [
-                            "routeResolverService", (routeResolverService: ngX.IRouteResolverService) => {
-                                return routeResolverService.resolve(path);
-                            }
-                        ]
-                    });
+                    return $routeProvider;
                 }
-                whenFn.apply($routeProvider, arguments);
+            }])
+            .run(["$injector", "$location", "$rootScope", "$route", "fire", "securityManager", ($injector: ng.auto.IInjectorService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService, $route: ng.route.IRouteService, fire: any, securityManager: any) => {
+                $rootScope.$on("$viewContentLoaded", () => {
+                    var $route: any = $injector.get("$route");
+                    var instance = $route.current.scope[$route.current.controllerAs];
+                    if (instance.onInit) instance.onInit();
 
-                return $routeProvider;
-            }
-        }])
-        .run(["$injector", "$location", "$rootScope", "$route", "fire", "securityManager", ($injector: ng.auto.IInjectorService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService, $route: ng.route.IRouteService, fire: any, securityManager:any) => {
-            $rootScope.$on("$viewContentLoaded", () => {
-                var $route: any = $injector.get("$route");
-                var instance = $route.current.scope[$route.current.controllerAs];
-                if (instance.onInit) instance.onInit();
+                    instance.onChildUpdated = (event: any) => {
+                        fire(document, "vmUpdate", {
+                            model: event.model,
+                            action: event.action
+                        });
+                    }
 
-                instance.onChildUpdated = (event:any) => {
-                    fire(document, "vmUpdate", {
-                        model: event.model,
-                        action: event.action
+                    document.addEventListener("modelUpdate", instance.onChildUpdated);
+
+                    $route.current.scope.$on("$destroy", () => {
+                        document.removeEventListener("modelUpdate", instance.onChildrenUpdated);
                     });
-                }
-
-                document.addEventListener("modelUpdate", instance.onChildUpdated);
-
-                $route.current.scope.$on("$destroy", () => {
-                    document.removeEventListener("modelUpdate", instance.onChildrenUpdated);
                 });
-            });
 
-            $rootScope.$on("$routeChangeStart", function (currentRoute, nextRoute) {
+                $rootScope.$on("$routeChangeStart", function (currentRoute, nextRoute) {
 
-                if (nextRoute.authorizationRequired && !securityManager.token) {
-                    $location.path("/login");
-                }
+                    if (nextRoute.$$route.authorizationRequired && !securityManager.token) {
+                        $location.path("/login");
+                    }
 
-                if ($location.path() === "/login") {
-                    securityManager.token = null;
-                }
-            });
+                    if ($location.path() === "/login") {
+                        securityManager.token = null;
+                    }
+                });
 
-            $rootScope.$on("$routeChangeStart", (event, next, current) => {
+                $rootScope.$on("$routeChangeStart", (event, next, current) => {
 
-                $rootScope["isNavigating"] = true;
-                /**
-                * if routes contain /login then assume every route authorization is required except for /login
-                */
+                    $rootScope["isNavigating"] = true;
+                    /**
+                    * if routes contain /login then assume every route authorization is required except for /login
+                    */
 
-                if ($location.path() === "/login") {
-                    securityManager.token = null;
-                }
+                    if ($location.path() === "/login") {
+                        securityManager.token = null;
+                    }
 
-                if ($route.routes["/login"]) {
+                    if ($route.routes["/login"]) {
 
 
-                } else {
+                    } else {
 
-                }
+                    }
 
-                var instance = current && current.controllerAs && current.scope ? current.scope[current.controllerAs] : null;
-                if (instance && instance.canDeactivate && !instance.deactivated) {
-                    event.preventDefault();
-                    instance.canDeactivate().then((canDeactivate: boolean) => {
-                        if (canDeactivate) {
-                            instance.deactivated = true;
-                            $location.path(next.originalPath);
-                        }
-                    });
-                } else {
-                    if (instance && instance.deactivate)
-                        instance.deactivate();
-                }
-            });
+                    var instance = current && current.controllerAs && current.scope ? current.scope[current.controllerAs] : null;
+                    if (instance && instance.canDeactivate && !instance.deactivated) {
+                        event.preventDefault();
+                        instance.canDeactivate().then((canDeactivate: boolean) => {
+                            if (canDeactivate) {
+                                instance.deactivated = true;
+                                $location.path(next.originalPath);
+                            }
+                        });
+                    } else {
+                        if (instance && instance.deactivate)
+                            instance.deactivate();
+                    }
+                });
             }]);
     } catch (error) {
 

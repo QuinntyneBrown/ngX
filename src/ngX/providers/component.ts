@@ -36,14 +36,14 @@
             if (options.is)
                 options.transclude = "element";
 
-            var directiveDefinitionObject:any = {
+            var directiveDefinitionObject: any = {
                 restrict: options.restrict || "E",
                 template: options.template,
                 templateUrl: options.templateUrl,
                 replace: options.replace || true,
-                scope: options.scope || {},     
+                scope: options.scope || {},
                 bindToController: options.bindToController || {},
-                transclude: options.transclude           
+                transclude: options.transclude
             }
 
             if (options.component) {
@@ -52,7 +52,7 @@
                 options.component.$inject = options.providers;
             } else {
                 directiveDefinitionObject.controllerAs = "vm";
-                directiveDefinitionObject.controller = function () {};                
+                directiveDefinitionObject.controller = function () { };
             }
 
             if (options.inputs && options.inputs.length > 0) {
@@ -68,20 +68,20 @@
                     } else {
                         directiveDefinitionObject.bindToController[prop] = "@";
                     }
-                        
-                }                
+
+                }
             }
 
             if ((options.component && options.component.styles) || options.styles) {
 
                 var styles = options.styles ? options.styles : options.component.styles;
 
-                directiveDefinitionObject.compile = function() {
+                directiveDefinitionObject.compile = function () {
                     return {
                         pre: function (scope, element, attributes, controller, transcludeFn) {
                             if (options.transclude)
-                                transcludeFn(scope, function(clone) {
-                                    
+                                transcludeFn(scope, function (clone) {
+
                                 });
 
                             if (!componentStyles[options.selector]) {
@@ -110,8 +110,8 @@
                         post: function (scope: any) {
 
                             var $injector = angular.element(document.getElementsByTagName("body")[0]).injector();
-                            
-                            var debounce:Function =<any>$injector.get("debounce");
+
+                            var debounce: Function = <any>$injector.get("debounce");
                             var securityManager: any = <any>$injector.get("securityManager");
 
                             if (scope && scope.vm) {
@@ -128,7 +128,7 @@
                                 }
                             });
 
-                            
+
 
                             if (options.properties) {
                                 for (var prop in options.properties) {
@@ -148,10 +148,14 @@
                                 scope.vm.onInit();
 
 
-                            scope.$on("$routeUpdate", function() {
+                            scope.$on("$routeUpdate", function () {
                                 if (scope.vm && scope.vm.onRouteUpdate)
                                     scope.vm.onRouteUpdate();
                             });
+
+                            if (scope.vm && scope.vm.onStoreUpdate)
+                                scope.$on("storeUpdate", scope.vm.onStoreUpdate);
+                            
 
                             if (scope.vm && scope.vm.onKeyDown) {
                                 document.addEventListener("keydown", scope.vm.onKeyDown);
@@ -161,7 +165,7 @@
                                 });
                             }
 
-                            scope.$on("$locationChangeSuccess",  () => {
+                            scope.$on("$locationChangeSuccess", () => {
                                 if (scope.vm && scope.vm.onLocationChangeSuccess)
                                     scope.vm.onLocationChangeSuccess();
                             });
@@ -179,8 +183,8 @@
                                     scope.vm.dispose();
                                 });
                             }
-                                
-                            
+
+
                         }
                     }
                 }
@@ -191,7 +195,7 @@
             angular.module(options.module).directive(componentNameCamelCase,
                 [() => { return directiveDefinitionObject; }]);
 
-            
+
 
             angular.module(options.module).controller(options.componentName || componentNameCamelCase + "Component", options.component);
 
@@ -221,7 +225,7 @@
                             }
                         ]);
             } catch (error) {
-                
+
             }
         }
 

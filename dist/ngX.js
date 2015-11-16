@@ -188,6 +188,8 @@ var ngX;
                                 if (scope.vm && scope.vm.onRouteUpdate)
                                     scope.vm.onRouteUpdate();
                             });
+                            if (scope.vm && scope.vm.onStoreUpdate)
+                                scope.$on("storeUpdate", scope.vm.onStoreUpdate);
                             if (scope.vm && scope.vm.onKeyDown) {
                                 document.addEventListener("keydown", scope.vm.onKeyDown);
                                 scope.$on("$destroy", function () {
@@ -351,6 +353,44 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    /**
+     * @name fetch
+     * @module ngX
+     */
+    var fetch = (function () {
+        function fetch($http, $q, fire) {
+            var _this = this;
+            this.$http = $http;
+            this.$q = $q;
+            this.fire = fire;
+            this.fromService = function (options) {
+                _this.fire(_this.bodyNativeElement, "FETCH_REQUEST", { options: options });
+                var deferred = _this.$q.defer();
+                _this.$http({ method: options.method, url: options.url, data: options.data, params: options.params }).then(function (results) {
+                    _this.fire(_this.bodyNativeElement, "FETCH_SUCCESS", { options: options, reuslts: results });
+                    deferred.resolve(results);
+                }).catch(function (error) {
+                    _this.fire(_this.bodyNativeElement, "FETCH_ERROR", { options: options, error: error });
+                });
+                return deferred.promise;
+            };
+        }
+        Object.defineProperty(fetch.prototype, "bodyNativeElement", {
+            get: function () {
+                return document.getElementsByTagName("body")[0];
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return fetch;
+    })();
+    angular.module("ngX").service("fetch", ["$http", "$q", "fire", fetch]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=fetch.js.map
+
+var ngX;
+(function (ngX) {
     "use strict";
     angular.module("ngX").value("fire", function (target, type, properties) {
         var htmlEvent = document.createEvent("HTMLEvents");
@@ -396,7 +436,7 @@ var ngX;
 var ngX;
 (function (ngX) {
     "use strict";
-    angular.module("ngX").value("getFromUrlSync", function (options) {
+    ngX.getFromUrlSync = function (options) {
         var responseText = "";
         var xhr = new XMLHttpRequest();
         xhr.open("GET", options.url, false);
@@ -412,7 +452,8 @@ var ngX;
         };
         xhr.send(null);
         return responseText;
-    });
+    };
+    angular.module("ngX").value("getFromUrlSync", ngX.getFromUrlSync);
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=getFromUrlSync.js.map
@@ -818,6 +859,12 @@ var ngX;
         angular.module("ngX")
             .provider("routeResolverService", [RouteResolverServiceProvider])
             .config(["$routeProvider", function ($routeProvider) {
+                $routeProvider.buildFromUrl = function (options) {
+                    var routes = JSON.parse(ngX.getFromUrlSync({ url: options.url }));
+                    for (var i = 0; i < routes.length; i++) {
+                        $routeProvider.when(routes[i].when, routes[i].config);
+                    }
+                };
                 var whenFn = $routeProvider.when;
                 $routeProvider.when = function () {
                     if (arguments[1] && arguments[0]) {
@@ -862,7 +909,7 @@ var ngX;
                     });
                 });
                 $rootScope.$on("$routeChangeStart", function (currentRoute, nextRoute) {
-                    if (nextRoute.authorizationRequired && !securityManager.token) {
+                    if (nextRoute.$$route.authorizationRequired && !securityManager.token) {
                         $location.path("/login");
                     }
                     if ($location.path() === "/login") {
