@@ -392,6 +392,25 @@ var ngX;
 var ngX;
 (function (ngX) {
     "use strict";
+    /**
+    * @name fetchCounter
+    * @module ngX
+    */
+    var fetchCounter = (function () {
+        function fetchCounter() {
+        }
+        return fetchCounter;
+    })();
+    ngX.fetchCounter = fetchCounter;
+    angular.module("ngX").service("fetchCounter", ["$q", fetchCounter])
+        .run(["fetchCounter", function (fetchCounter) { }]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=fetchCounter.js.map
+
+var ngX;
+(function (ngX) {
+    "use strict";
     angular.module("ngX").value("fire", function (target, type, properties) {
         var htmlEvent = document.createEvent("HTMLEvents");
         htmlEvent.initEvent(type, true, true);
@@ -603,6 +622,30 @@ var ngX;
 // add model registration with change notifications firing after save method or update method  
 
 //# sourceMappingURL=model.js.map
+
+var ngX;
+(function (ngX) {
+    var navigation = (function () {
+        function navigation($location, $rootScope, localStorageManager) {
+            var _this = this;
+            this.$location = $location;
+            this.$rootScope = $rootScope;
+            this.localStorageManager = localStorageManager;
+            this.urls = [];
+            this.goBack = function () {
+                _this.$location.path(_this.urls.pop());
+            };
+            $rootScope.$on("$locationChangeSuccess", function () {
+                _this.urls.push($location.path());
+            });
+        }
+        return navigation;
+    })();
+    ngX.navigation = navigation;
+    angular.module("ngX").service("navigation", ["$location", "$rootScope", "localStorageManager", navigation]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=navigation.js.map
 
 var ngX;
 (function (ngX) {
