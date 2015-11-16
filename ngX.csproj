@@ -62,8 +62,6 @@
   <ItemGroup>
     <Content Include="dist\ngX.js" />
     <Content Include="examples\es5\index.html" />
-    <Content Include="examples\componentLifeCycle\about.component.html" />
-    <Content Include="examples\componentLifeCycle\home.component.html" />
     <Content Include="examples\componentLifeCycle\index.html" />
     <Content Include="examples\dynamicStyles\index.html" />
     <Content Include="examples\hi\index.html" />

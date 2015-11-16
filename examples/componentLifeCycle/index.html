@@ -70,7 +70,12 @@
             component: HomeComponent,
             providers: ["$q", "routeData"],
             route: "/",
-            key: "home"
+            key: "home",
+            template: [
+                " <div> ",
+                "     <h1>{{ ::vm.title }}</h1> ",
+                " </div> "
+            ].join(" ")
         });
 
         function AboutComponent() {
