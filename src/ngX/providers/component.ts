@@ -112,10 +112,10 @@
                             var $injector = angular.element(document.getElementsByTagName("body")[0]).injector();
 
                             var debounce: Function = <any>$injector.get("debounce");
-                            var securityManager: any = <any>$injector.get("securityManager");
+                            var securityStore: any = <any>$injector.get("securityStore");
 
                             if (scope && scope.vm) {
-                                scope.vm.currentUser = securityManager.currentUser;
+                                scope.vm.currentUser = securityStore.currentUser;
                             }
 
                             window.addEventListener("resize", function () {

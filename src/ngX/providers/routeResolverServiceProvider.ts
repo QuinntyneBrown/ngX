@@ -177,7 +177,7 @@ module ngX {
                     return $routeProvider;
                 }
             }])
-            .run(["$injector", "$location", "$rootScope", "$route", "fire", "securityManager", ($injector: ng.auto.IInjectorService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService, $route: ng.route.IRouteService, fire: any, securityManager: any) => {
+            .run(["$injector", "$location", "$rootScope", "$route", "fire", "securityStore", ($injector: ng.auto.IInjectorService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService, $route: ng.route.IRouteService, fire: any, securityStore: any) => {
                 $rootScope.$on("$viewContentLoaded", () => {
                     var $route: any = $injector.get("$route");
                     var instance = $route.current.scope[$route.current.controllerAs];
@@ -199,12 +199,12 @@ module ngX {
 
                 $rootScope.$on("$routeChangeStart", function (currentRoute, nextRoute) {
 
-                    if (nextRoute.$$route.authorizationRequired && !securityManager.token) {
+                    if (nextRoute.$$route.authorizationRequired && !securityStore.token) {
                         $location.path("/login");
                     }
 
                     if ($location.path() === "/login") {
-                        securityManager.token = null;
+                        securityStore.token = null;
                     }
                 });
 
@@ -216,7 +216,7 @@ module ngX {
                     */
 
                     if ($location.path() === "/login") {
-                        securityManager.token = null;
+                        securityStore.token = null;
                     }
 
                     if ($route.routes["/login"]) {

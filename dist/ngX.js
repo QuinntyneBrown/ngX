@@ -160,9 +160,9 @@ var ngX;
                         post: function (scope) {
                             var $injector = angular.element(document.getElementsByTagName("body")[0]).injector();
                             var debounce = $injector.get("debounce");
-                            var securityManager = $injector.get("securityManager");
+                            var securityStore = $injector.get("securityStore");
                             if (scope && scope.vm) {
-                                scope.vm.currentUser = securityManager.currentUser;
+                                scope.vm.currentUser = securityStore.currentUser;
                             }
                             window.addEventListener("resize", function () {
                                 if (scope.vm && scope.vm.onResize) {
@@ -958,7 +958,7 @@ var ngX;
                     return $routeProvider;
                 };
             }])
-            .run(["$injector", "$location", "$rootScope", "$route", "fire", "securityManager", function ($injector, $location, $rootScope, $route, fire, securityManager) {
+            .run(["$injector", "$location", "$rootScope", "$route", "fire", "securityStore", function ($injector, $location, $rootScope, $route, fire, securityStore) {
                 $rootScope.$on("$viewContentLoaded", function () {
                     var $route = $injector.get("$route");
                     var instance = $route.current.scope[$route.current.controllerAs];
@@ -976,11 +976,11 @@ var ngX;
                     });
                 });
                 $rootScope.$on("$routeChangeStart", function (currentRoute, nextRoute) {
-                    if (nextRoute.$$route.authorizationRequired && !securityManager.token) {
+                    if (nextRoute.$$route.authorizationRequired && !securityStore.token) {
                         $location.path("/login");
                     }
                     if ($location.path() === "/login") {
-                        securityManager.token = null;
+                        securityStore.token = null;
                     }
                 });
                 $rootScope.$on("$routeChangeStart", function (event, next, current) {
@@ -989,7 +989,7 @@ var ngX;
                     * if routes contain /login then assume every route authorization is required except for /login
                     */
                     if ($location.path() === "/login") {
-                        securityManager.token = null;
+                        securityStore.token = null;
                     }
                     if ($route.routes["/login"]) {
                     }
@@ -1020,11 +1020,11 @@ var ngX;
 
 var ngX;
 (function (ngX) {
-    var SecurityManager = (function () {
-        function SecurityManager(localStorageManager) {
+    var SecurityStore = (function () {
+        function SecurityStore(localStorageManager) {
             this.localStorageManager = localStorageManager;
         }
-        Object.defineProperty(SecurityManager.prototype, "token", {
+        Object.defineProperty(SecurityStore.prototype, "token", {
             get: function () {
                 return this.localStorageManager.get({ name: "token" });
             },
@@ -1034,7 +1034,7 @@ var ngX;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(SecurityManager.prototype, "currentUser", {
+        Object.defineProperty(SecurityStore.prototype, "currentUser", {
             get: function () {
                 return this.localStorageManager.get({ name: "currentUser" });
             },
@@ -1044,12 +1044,12 @@ var ngX;
             enumerable: true,
             configurable: true
         });
-        return SecurityManager;
+        return SecurityStore;
     })();
-    angular.module("ngX").service("securityManager", ["localStorageManager", SecurityManager]);
+    angular.module("ngX").service("securityStore", ["localStorageManager", SecurityStore]);
 })(ngX || (ngX = {}));
 
-//# sourceMappingURL=securityManager.js.map
+//# sourceMappingURL=securityStore.js.map
 
 var ngX;
 (function (ngX) {

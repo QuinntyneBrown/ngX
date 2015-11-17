@@ -20,6 +20,10 @@
         public hasHistory = () => {
             return this.urls.length > 0;
         }
+
+        public setTitle = (options:any) => {
+            document.title = options.title;
+        }
     }
 
     angular.module("ngX")

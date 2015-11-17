@@ -1,6 +1,6 @@
 ﻿module ngX {
 
-    class SecurityManager {
+    class SecurityStore {
 
         constructor(private localStorageManager: any) {
 
@@ -24,6 +24,6 @@
         }
     }
 
-    angular.module("ngX").service("securityManager", ["localStorageManager",SecurityManager]);
+    angular.module("ngX").service("securityStore", ["localStorageManager", SecurityStore]);
 
 }
