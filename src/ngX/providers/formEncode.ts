@@ -8,7 +8,7 @@
             pairs.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
         }
         return pairs.join('&').replace(/%20/g, '+');
-    };
+    };  
 
     angular.module("ngX").value("formEncode", formEncode);
 
