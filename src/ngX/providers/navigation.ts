@@ -24,6 +24,11 @@
         public setTitle = (options:any) => {
             document.title = options.title;
         }
+
+        public setMetaTag = (options: any) => {
+            angular.element("meta[name=" + options.name +"]").remove();
+            angular.element('head').append("<meta name='" + options.name + "' content='" + options.value +"'>");
+        }
     }
 
     angular.module("ngX")

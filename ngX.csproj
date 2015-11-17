@@ -90,6 +90,7 @@
     <Content Include="gulpfile.js" />
     <Content Include="karma.conf.js" />
     <TypeScriptCompile Include="src\ngX\providers\fetch.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\fetchCounter.ts" />
     <TypeScriptCompile Include="src\ngX\providers\localStorageManager.ts" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -120,6 +121,7 @@
     <TypeScriptCompile Include="src\ngX\providers\getX.ts" />
     <TypeScriptCompile Include="src\ngX\providers\guid.ts" />
     <TypeScriptCompile Include="src\ngX\providers\model.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\navigation.ts" />
     <TypeScriptCompile Include="src\ngX\providers\renderedNodes.ts" />
     <TypeScriptCompile Include="src\ngX\providers\requestCount.ts" />
     <TypeScriptCompile Include="src\ngX\providers\routeResolverServiceProvider.ts" />
