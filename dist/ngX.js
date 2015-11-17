@@ -71,6 +71,36 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    "use strict";
+    var AuthorizationInterceptor = (function () {
+        function AuthorizationInterceptor(securityStore) {
+            var _this = this;
+            this.securityStore = securityStore;
+            this.request = function (config) {
+                if (_this.securityStore.token) {
+                    config.headers.Authorization = "Bearer " + _this.securityStore.token;
+                }
+                return config;
+            };
+        }
+        AuthorizationInterceptor.instance = function (securityStore) {
+            return new AuthorizationInterceptor(securityStore);
+        };
+        return AuthorizationInterceptor;
+    })();
+    angular.module("ngX")
+        .factory("authorizationInterceptor", ["securityStore", AuthorizationInterceptor.instance])
+        .config([
+        "$httpProvider", function ($httpProvider) {
+            $httpProvider.interceptors.push("authorizationInterceptor");
+        }
+    ]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=authorizationInterceptor.js.map
+
+var ngX;
+(function (ngX) {
     /**
     * @name Component
     * @description syntax sugar to ease transition to angular 2
@@ -379,7 +409,7 @@ var ngX;
             this.fromService = function (options) {
                 _this.fire(_this.bodyNativeElement, "FETCH_REQUEST", { options: options });
                 var deferred = _this.$q.defer();
-                _this.$http({ method: options.method, url: options.url, data: options.data, params: options.params }).then(function (results) {
+                _this.$http({ method: options.method, url: options.url, data: options.data, params: options.params, headers: options.headers }).then(function (results) {
                     _this.fire(_this.bodyNativeElement, "FETCH_SUCCESS", { options: options, reuslts: results });
                     deferred.resolve(results);
                 }).catch(function (error) {
@@ -435,6 +465,21 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=fire.js.map
+
+var ngX;
+(function (ngX) {
+    "use strict";
+    var formEncode = function (data) {
+        var pairs = [];
+        for (var name in data) {
+            pairs.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
+        }
+        return pairs.join('&').replace(/%20/g, '+');
+    };
+    angular.module("ngX").value("formEncode", formEncode);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=formEncode.js.map
 
 var ngX;
 (function (ngX) {
@@ -632,6 +677,52 @@ var ngX;
 
 //# sourceMappingURL=localStorageManager.js.map
 
+var ngX;
+(function (ngX) {
+    "use strict";
+    var LoginRedirectProvider = (function () {
+        function LoginRedirectProvider() {
+            var _this = this;
+            this.loginUrl = "/login";
+            this.defaultPath = "/";
+            this.setLoginUrl = function (value) {
+                _this.loginUrl = value;
+            };
+            this.setDefaultUrl = function (value) {
+                _this.defaultPath = value;
+            };
+            this.$get = ["$q", "$location", function ($q, $location) {
+                    return {
+                        responseError: function (response) {
+                            if (response.status == 401) {
+                                _this.lastPath = $location.path();
+                                $location.path(_this.loginUrl);
+                            }
+                            return $q.reject(response);
+                        },
+                        redirectPreLogin: function () {
+                            if (_this.lastPath) {
+                                $location.path(_this.lastPath);
+                                _this.lastPath = "";
+                            }
+                            else {
+                                $location.path(_this.defaultPath);
+                            }
+                        }
+                    };
+                }];
+        }
+        return LoginRedirectProvider;
+    })();
+    angular.module("ngX").provider("loginRedirect", [LoginRedirectProvider])
+        .config(["$httpProvider", config]);
+    function config($httpProvider) {
+        $httpProvider.interceptors.push("loginRedirect");
+    }
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=loginRedirectProvider.js.map
+
 // add model registration with change notifications firing after save method or update method  
 
 //# sourceMappingURL=model.js.map
@@ -650,6 +741,13 @@ var ngX;
             };
             this.hasHistory = function () {
                 return _this.urls.length > 0;
+            };
+            this.setTitle = function (options) {
+                document.title = options.title;
+            };
+            this.setMetaTag = function (options) {
+                angular.element("meta[name=" + options.name + "]").remove();
+                angular.element('head').append("<meta name='" + options.name + "' content='" + options.value + "'>");
             };
             $rootScope.$on("$locationChangeSuccess", function () {
                 _this.urls.push($location.path());
