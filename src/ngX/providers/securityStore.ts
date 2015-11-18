@@ -2,8 +2,11 @@
 
     class SecurityStore {
 
-        constructor(private localStorageManager: any) {
+        constructor(private $rootScope, private localStorageManager: any) {
 
+            document.addEventListener("FETCH_SUCCESS", function () {
+                $rootScope.$broadcast("STORE_UPDATE");
+            });            
         }
 
         
@@ -24,6 +27,10 @@
         }
     }
 
-    angular.module("ngX").service("securityStore", ["localStorageManager", SecurityStore]);
+    angular.module("ngX").service("securityStore", ["$rootScope","localStorageManager", SecurityStore])
+        .run(["securityStore", (securityStore) => {
+
+        }]);
+
 
 }

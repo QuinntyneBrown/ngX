@@ -219,7 +219,7 @@ var ngX;
                                     scope.vm.onRouteUpdate();
                             });
                             if (scope.vm && scope.vm.onStoreUpdate)
-                                scope.$on("storeUpdate", scope.vm.onStoreUpdate);
+                                scope.$on("STORE_UPDATE", scope.vm.onStoreUpdate);
                             if (scope.vm && scope.vm.onKeyDown) {
                                 document.addEventListener("keydown", scope.vm.onKeyDown);
                                 scope.$on("$destroy", function () {
@@ -465,6 +465,21 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=fire.js.map
+
+var ngX;
+(function (ngX) {
+    angular.module("ngX").run(["$injector", "$rootScope", function ($injector, $rootScope) {
+            $rootScope.$on("$viewContentLoaded", function () {
+                var $route = $injector.get("$route");
+                var instance = $route.current.scope[$route.current.controllerAs];
+                if (instance && instance.onStoreUpdate) {
+                    $route.current.scope.$on("STORE_UPDATE", instance.onStoreUpdate);
+                }
+            });
+        }]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=flux.js.map
 
 var ngX;
 (function (ngX) {
@@ -1119,8 +1134,12 @@ var ngX;
 var ngX;
 (function (ngX) {
     var SecurityStore = (function () {
-        function SecurityStore(localStorageManager) {
+        function SecurityStore($rootScope, localStorageManager) {
+            this.$rootScope = $rootScope;
             this.localStorageManager = localStorageManager;
+            document.addEventListener("FETCH_SUCCESS", function () {
+                $rootScope.$broadcast("STORE_UPDATE");
+            });
         }
         Object.defineProperty(SecurityStore.prototype, "token", {
             get: function () {
@@ -1144,7 +1163,9 @@ var ngX;
         });
         return SecurityStore;
     })();
-    angular.module("ngX").service("securityStore", ["localStorageManager", SecurityStore]);
+    angular.module("ngX").service("securityStore", ["$rootScope", "localStorageManager", SecurityStore])
+        .run(["securityStore", function (securityStore) {
+        }]);
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=securityStore.js.map

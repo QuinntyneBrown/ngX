@@ -154,7 +154,7 @@
                             });
 
                             if (scope.vm && scope.vm.onStoreUpdate)
-                                scope.$on("storeUpdate", scope.vm.onStoreUpdate);
+                                scope.$on("STORE_UPDATE", scope.vm.onStoreUpdate);
                             
 
                             if (scope.vm && scope.vm.onKeyDown) {
