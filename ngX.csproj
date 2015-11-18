@@ -67,12 +67,14 @@
     <Content Include="examples\hi\index.html" />
     <Content Include="examples\hi\quinntynebrown.jpg" />
     <Content Include="examples\localStorageManager\index.html" />
+    <Content Include="examples\loginRedirect\index.html" />
     <Content Include="examples\polymerStyle\index.html" />
     <Content Include="dist\ngX.min.js.map">
       <DependentUpon>ngX.min.js</DependentUpon>
     </Content>
     <Content Include="examples\routeReload\listDetail.component.html" />
     <Content Include="examples\routeReload\index.html" />
+    <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -89,8 +91,10 @@
     <Content Include="gulpfile.config.js" />
     <Content Include="gulpfile.js" />
     <Content Include="karma.conf.js" />
+    <TypeScriptCompile Include="src\ngX\providers\authorizationInterceptor.ts" />
     <TypeScriptCompile Include="src\ngX\providers\fetch.ts" />
     <TypeScriptCompile Include="src\ngX\providers\fetchCounter.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\formEncode.ts" />
     <TypeScriptCompile Include="src\ngX\providers\localStorageManager.ts" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -99,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="examples\authorizedRoute\" />
+    <Folder Include="examples\navigation\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="examples\basic\index.ts" />
@@ -120,6 +125,7 @@
     <TypeScriptCompile Include="src\ngX\providers\getFromUrlSync.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getX.ts" />
     <TypeScriptCompile Include="src\ngX\providers\guid.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\loginRedirectProvider.ts" />
     <TypeScriptCompile Include="src\ngX\providers\model.ts" />
     <TypeScriptCompile Include="src\ngX\providers\navigation.ts" />
     <TypeScriptCompile Include="src\ngX\providers\renderedNodes.ts" />
@@ -145,7 +151,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50030</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
