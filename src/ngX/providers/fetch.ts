@@ -12,7 +12,7 @@
             this.fire(this.bodyNativeElement, "FETCH_REQUEST", { options: options });
             var deferred = this.$q.defer();
             this.$http({ method: options.method, url: options.url, data: options.data, params: options.params, headers: options.headers }).then((results) => {
-                this.fire(this.bodyNativeElement,"FETCH_SUCCESS", { options: options, reuslts: results });
+                this.fire(this.bodyNativeElement, "FETCH_SUCCESS", { options: options, results: results });
                 deferred.resolve(results);
             }).catch((error) => {
                 this.fire(this.bodyNativeElement, "FETCH_ERROR", { options: options, error: error });

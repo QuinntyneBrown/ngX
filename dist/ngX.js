@@ -410,7 +410,7 @@ var ngX;
                 _this.fire(_this.bodyNativeElement, "FETCH_REQUEST", { options: options });
                 var deferred = _this.$q.defer();
                 _this.$http({ method: options.method, url: options.url, data: options.data, params: options.params, headers: options.headers }).then(function (results) {
-                    _this.fire(_this.bodyNativeElement, "FETCH_SUCCESS", { options: options, reuslts: results });
+                    _this.fire(_this.bodyNativeElement, "FETCH_SUCCESS", { options: options, results: results });
                     deferred.resolve(results);
                 }).catch(function (error) {
                     _this.fire(_this.bodyNativeElement, "FETCH_ERROR", { options: options, error: error });
@@ -1141,10 +1141,14 @@ var ngX;
 (function (ngX) {
     var SecurityStore = (function () {
         function SecurityStore($rootScope, localStorageManager) {
+            var _this = this;
             this.$rootScope = $rootScope;
             this.localStorageManager = localStorageManager;
-            document.addEventListener("FETCH_SUCCESS", function () {
-                $rootScope.$broadcast("STORE_UPDATE");
+            document.addEventListener("FETCH_SUCCESS", function (event) {
+                if (event.results && event.results.data.access_token) {
+                    _this.token = event.results.data.access_token;
+                    $rootScope.$broadcast("STORE_UPDATE", { store: _this });
+                }
             });
         }
         Object.defineProperty(SecurityStore.prototype, "token", {

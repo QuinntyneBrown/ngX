@@ -3,10 +3,12 @@
     class SecurityStore {
 
         constructor(private $rootScope, private localStorageManager: any) {
-
-            document.addEventListener("FETCH_SUCCESS", function () {
-                $rootScope.$broadcast("STORE_UPDATE");
-            });            
+            document.addEventListener("FETCH_SUCCESS", (event:any) => {
+                if (event.results && event.results.data.access_token) {
+                    this.token = event.results.data.access_token;
+                    $rootScope.$broadcast("STORE_UPDATE", { store: this });
+                }
+            });           
         }
 
         
