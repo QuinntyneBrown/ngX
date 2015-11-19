@@ -31,7 +31,10 @@
                     }
                     return $q.reject(response);
                 },
-
+                redirectToLogin: () => {
+                    this.lastPath = $location.path();
+                    $location.path(this.loginUrl);
+                },
                 redirectPreLogin: () => {
 
                     if (this.lastPath) {

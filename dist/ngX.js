@@ -715,6 +715,10 @@ var ngX;
                             }
                             return $q.reject(response);
                         },
+                        redirectToLogin: function () {
+                            _this.lastPath = $location.path();
+                            $location.path(_this.loginUrl);
+                        },
                         redirectPreLogin: function () {
                             if (_this.lastPath) {
                                 $location.path(_this.lastPath);
@@ -1071,7 +1075,7 @@ var ngX;
                     return $routeProvider;
                 };
             }])
-            .run(["$injector", "$location", "$rootScope", "$route", "fire", "securityStore", function ($injector, $location, $rootScope, $route, fire, securityStore) {
+            .run(["$injector", "$location", "$rootScope", "$route", "loginRedirect", "fire", "securityStore", function ($injector, $location, $rootScope, $route, loginRedirect, fire, securityStore) {
                 $rootScope.$on("$viewContentLoaded", function () {
                     var $route = $injector.get("$route");
                     var instance = $route.current.scope[$route.current.controllerAs];
@@ -1090,7 +1094,9 @@ var ngX;
                 });
                 $rootScope.$on("$routeChangeStart", function (currentRoute, nextRoute) {
                     if (nextRoute.$$route.authorizationRequired && !securityStore.token) {
-                        $location.path("/login");
+                        $rootScope.$evalAsync(function () {
+                            loginRedirect.redirectToLogin();
+                        });
                     }
                     if ($location.path() === "/login") {
                         securityStore.token = null;

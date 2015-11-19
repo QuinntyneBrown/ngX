@@ -94,6 +94,7 @@
     <TypeScriptCompile Include="src\ngX\providers\authorizationInterceptor.ts" />
     <TypeScriptCompile Include="src\ngX\providers\fetch.ts" />
     <TypeScriptCompile Include="src\ngX\providers\fetchCounter.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\flux.ts" />
     <TypeScriptCompile Include="src\ngX\providers\formEncode.ts" />
     <TypeScriptCompile Include="src\ngX\providers\localStorageManager.ts" />
     <Content Include="Web.config" />
