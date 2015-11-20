@@ -396,16 +396,42 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    //http://victorsavkin.com/post/99998937651/building-angular-apps-using-flux-architecture    
+    var EventEmitter = (function () {
+        function EventEmitter() {
+            this.listeners = [];
+            this.listeners = [];
+        }
+        EventEmitter.prototype.emit = function (event) {
+            this.listeners.forEach(function (listener) {
+                listener(event);
+            });
+        };
+        EventEmitter.prototype.addListener = function (listener) {
+            this.listeners.push(listener);
+            return this.listeners.length - 1;
+        };
+        return EventEmitter;
+    })();
+    angular.module("ngX").service("eventEmitter", [EventEmitter]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=eventEmitter.js.map
+
+var ngX;
+(function (ngX) {
     /**
      * @name fetch
      * @module ngX
      */
     var fetch = (function () {
-        function fetch($http, $q, fire) {
+        function fetch($http, $q, fire, localStorageManager) {
             var _this = this;
             this.$http = $http;
             this.$q = $q;
             this.fire = fire;
+            this.localStorageManager = localStorageManager;
+            this.inMemoryCache = {};
             this.fromService = function (options) {
                 _this.fire(_this.bodyNativeElement, "FETCH_REQUEST", { options: options });
                 var deferred = _this.$q.defer();
@@ -415,6 +441,21 @@ var ngX;
                 }).catch(function (error) {
                     _this.fire(_this.bodyNativeElement, "FETCH_ERROR", { options: options, error: error });
                 });
+                return deferred.promise;
+            };
+            this.fromCacheOrService = function (options) {
+                var deferred = _this.$q.defer();
+                var cachedData = _this.localStorageManager.get({ name: options.url });
+                if (!cachedData) {
+                    _this.fromService(options).then(function (results) {
+                        deferred.resolve(results);
+                    }).catch(function (error) {
+                        deferred.reject(error);
+                    });
+                }
+                else {
+                    deferred.resolve(cachedData.value);
+                }
                 return deferred.promise;
             };
         }
@@ -427,7 +468,7 @@ var ngX;
         });
         return fetch;
     })();
-    angular.module("ngX").service("fetch", ["$http", "$q", "fire", fetch]);
+    angular.module("ngX").service("fetch", ["$http", "$q", "fire", "localStorageManager", fetch]);
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=fetch.js.map
@@ -1139,11 +1180,15 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    //http://victorsavkin.com/post/99998937651/building-angular-apps-using-flux-architecture
     var SecurityStore = (function () {
-        function SecurityStore($rootScope, localStorageManager) {
+        function SecurityStore($rootScope, dispathcer, localStorageManager) {
             var _this = this;
             this.$rootScope = $rootScope;
+            this.dispathcer = dispathcer;
             this.localStorageManager = localStorageManager;
+            this.emitChange = function () {
+            };
             document.addEventListener("FETCH_SUCCESS", function (event) {
                 if (event.results && event.results.data.access_token) {
                     _this.token = event.results.data.access_token;
@@ -1173,7 +1218,7 @@ var ngX;
         });
         return SecurityStore;
     })();
-    angular.module("ngX").service("securityStore", ["$rootScope", "localStorageManager", SecurityStore])
+    angular.module("ngX").service("securityStore", ["$rootScope", "dispathcer", "localStorageManager", SecurityStore])
         .run(["securityStore", function (securityStore) {
         }]);
 })(ngX || (ngX = {}));

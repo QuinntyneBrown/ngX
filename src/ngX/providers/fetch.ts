@@ -6,8 +6,10 @@
      */
     class fetch {
 
-        constructor(private $http: ng.IHttpService, private $q: ng.IQService, private fire:Function) { }
+        constructor(private $http: ng.IHttpService, private $q: ng.IQService, private fire: Function, private localStorageManager) { }
         
+        public inMemoryCache: any = {};
+
         public fromService = (options: any) => {
             this.fire(this.bodyNativeElement, "FETCH_REQUEST", { options: options });
             var deferred = this.$q.defer();
@@ -20,11 +22,27 @@
             return deferred.promise;
         }
 
+        public fromCacheOrService = (options: any) => {
+            var deferred = this.$q.defer();
+            var cachedData = this.localStorageManager.get({ name: options.url });
+            if (!cachedData) {
+                this.fromService(options).then((results) => {
+                    deferred.resolve(results);
+                }).catch((error: Error) => {
+                    deferred.reject(error);
+                });
+            } else {
+                deferred.resolve(cachedData.value);
+            }
+            return deferred.promise;
+        }
+
+
         public get bodyNativeElement() {
             return document.getElementsByTagName("body")[0];
         }
 
     }
 
-    angular.module("ngX").service("fetch", ["$http", "$q","fire", fetch]);
+    angular.module("ngX").service("fetch", ["$http", "$q","fire","localStorageManager", fetch]);
 } 
