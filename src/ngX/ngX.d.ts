@@ -10,7 +10,7 @@
 
     /**
      * @name ITranslateXAsync
-     * @module App.UI
+     * @module ngX
      */
      export interface ITranslateXAsync {
          (options: any): ng.IPromise<any>;

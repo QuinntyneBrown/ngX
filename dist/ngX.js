@@ -64,6 +64,25 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    "use strict";
+    var $q = angular.injector(['ng']).get("$q");
+    /**
+     * @name appendToBodyAsync
+     * @module ngX
+     */
+    ngX.appendToBodyAsync = function (options) {
+        var deferred = $q.defer();
+        document.body.appendChild(options.nativeElement);
+        setTimeout(function () { deferred.resolve(); }, options.wait || 100);
+        return deferred.promise;
+    };
+    angular.module("ngX").value("appendToBodyAsync", ngX.appendToBodyAsync);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=appendToBodyAsync.js.map
+
+var ngX;
+(function (ngX) {
     ngX.appModuleName = "app";
 })(ngX || (ngX = {}));
 
@@ -397,26 +416,54 @@ var ngX;
 var ngX;
 (function (ngX) {
     //http://victorsavkin.com/post/99998937651/building-angular-apps-using-flux-architecture    
-    var EventEmitter = (function () {
-        function EventEmitter() {
-            this.listeners = [];
-            this.listeners = [];
-        }
-        EventEmitter.prototype.emit = function (event) {
-            this.listeners.forEach(function (listener) {
-                listener(event);
+    function eventEmitter(guid) {
+        var self = this;
+        self.listeners = [];
+        self.addListener = function (options) {
+            var id = guid();
+            self.listeners.push({
+                id: id,
+                actionType: options.actionType,
+                callback: options.callback
             });
+            return id;
         };
-        EventEmitter.prototype.addListener = function (listener) {
-            this.listeners.push(listener);
-            return this.listeners.length - 1;
+        self.removeListener = function (options) {
+            for (var i = 0; i < self.listeners.length; i++) {
+                if (self.listeners[i].id === options.id) {
+                    self.listeners.slice(i, 1);
+                }
+            }
         };
-        return EventEmitter;
-    })();
-    angular.module("ngX").service("eventEmitter", [EventEmitter]);
+        self.emit = function (options) {
+            for (var i = 0; i < self.listeners.length; i++) {
+                if (self.listeners[i].actionType === options.actionType) {
+                    self.listeners[i].callback(options.options);
+                }
+            }
+        };
+        return self;
+    }
+    angular.module("ngX").service("dispatcher", ["guid", eventEmitter]);
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=eventEmitter.js.map
+
+var ngX;
+(function (ngX) {
+    "use strict";
+    var $q = angular.injector(['ng']).get("$q");
+    /**
+     * @name extendCssAsync
+     * @module ngX
+     */
+    ngX.extendCssAsync = function (options) {
+        return $q.when(angular.extend(options.nativeHTMLElement.style, options.cssObject));
+    };
+    angular.module("ngX").value("extendCssAsync", ngX.extendCssAsync);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=extendCssAsync.js.map
 
 var ngX;
 (function (ngX) {
@@ -827,6 +874,26 @@ var ngX;
 (function (ngX) {
     "use strict";
     /**
+     * @name removeElement
+     * @module ngX
+     */
+    ngX.removeElement = function (options) {
+        if (options.nativeHTMLElement) {
+            var $target = angular.element(options.nativeHTMLElement);
+            options.nativeHTMLElement.parentNode.removeChild(options.nativeHTMLElement);
+            $target.remove();
+            delete options.nativeHTMLElement;
+        }
+    };
+    angular.module("ngX").value("removeElement", ngX.removeElement);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=removeElement.js.map
+
+var ngX;
+(function (ngX) {
+    "use strict";
+    /**
     * @name RenderedNodes
     * @module ngX
     * @description
@@ -1182,10 +1249,10 @@ var ngX;
 (function (ngX) {
     //http://victorsavkin.com/post/99998937651/building-angular-apps-using-flux-architecture
     var SecurityStore = (function () {
-        function SecurityStore($rootScope, dispathcer, localStorageManager) {
+        function SecurityStore($rootScope, dispatcher, localStorageManager) {
             var _this = this;
             this.$rootScope = $rootScope;
-            this.dispathcer = dispathcer;
+            this.dispatcher = dispatcher;
             this.localStorageManager = localStorageManager;
             this.emitChange = function () {
             };
@@ -1218,12 +1285,37 @@ var ngX;
         });
         return SecurityStore;
     })();
-    angular.module("ngX").service("securityStore", ["$rootScope", "dispathcer", "localStorageManager", SecurityStore])
+    angular.module("ngX").service("securityStore", ["$rootScope", "dispatcher", "localStorageManager", SecurityStore])
         .run(["securityStore", function (securityStore) {
         }]);
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=securityStore.js.map
+
+var ngX;
+(function (ngX) {
+    "use strict";
+    var $q = angular.injector(['ng']).get("$q");
+    /**
+     * @name setOpacityAsync
+     * @module ngX
+     */
+    ngX.setOpacityAsync = function (options) {
+        var deferred = $q.defer();
+        if (options.nativeHtmlElement) {
+            options.nativeHtmlElement.style.opacity = options.opacity;
+            options.nativeHtmlElement.addEventListener('transitionend', resolve, false);
+        }
+        function resolve() {
+            options.nativeHtmlElement.removeEventListener('transitionend', resolve);
+            deferred.resolve();
+        }
+        return deferred.promise;
+    };
+    angular.module("ngX").value("setOpacityAsync", ngX.setOpacityAsync);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=setOpacityAsync.js.map
 
 var ngX;
 (function (ngX) {

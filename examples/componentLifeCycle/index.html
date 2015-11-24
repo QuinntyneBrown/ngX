@@ -21,21 +21,6 @@
                     componentTemplateUrl: "/examples/componentLifeCycle/about.component.html"
                 });
 
-                $routeProvider.when("/override", {
-                    resolve: {
-                        override: [
-                            "$location", "$q", function($location, $q) {
-                                var deferred = $q.defer();
-
-                                $location.path("/");
-                                deferred.reject();
-                                return deferred.promise;
-
-                            }
-                        ]
-                    }
-                });
-
             }]);
 
 
@@ -84,9 +69,10 @@
 
         ngX.Component({
             component: AboutComponent,
+            styles:"h1 { color: red; }",
             template: [
                 " <div> ",
-                "     <h1>Change: {{ ::vm.title }}</h1> ",
+                "     <h1>Fabio: {{ ::vm.title }}</h1> ",
                 " </div> "
             ].join(" ")
         });
