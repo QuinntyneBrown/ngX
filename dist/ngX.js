@@ -415,6 +415,43 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    function eventEmitter(guid) {
+        var self = this;
+        self.listeners = [];
+        self.addListener = function (options) {
+            var id = guid();
+            self.listeners.push({
+                id: id,
+                actionType: options.actionType,
+                callback: options.callback
+            });
+            return id;
+        };
+        self.removeListener = function (options) {
+            var length = self.listeners.length;
+            for (var i = 0; i < length; i++) {
+                if (self.listeners[i] && self.listeners[i].id === options.id) {
+                    self.listeners.splice(i, 1);
+                    i = length;
+                }
+            }
+        };
+        self.emit = function (options) {
+            for (var i = 0; i < self.listeners.length; i++) {
+                if (self.listeners[i].actionType === options.actionType) {
+                    self.listeners[i].callback(options.options);
+                }
+            }
+        };
+        return self;
+    }
+    angular.module("ngX").service("dispatcher", ["guid", eventEmitter]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=dispatcher.js.map
+
+var ngX;
+(function (ngX) {
     //http://victorsavkin.com/post/99998937651/building-angular-apps-using-flux-architecture    
     function eventEmitter(guid) {
         var self = this;
@@ -472,21 +509,17 @@ var ngX;
      * @module ngX
      */
     var fetch = (function () {
-        function fetch($http, $q, fire, localStorageManager) {
+        function fetch($http, $q, localStorageManager) {
             var _this = this;
             this.$http = $http;
             this.$q = $q;
-            this.fire = fire;
             this.localStorageManager = localStorageManager;
             this.inMemoryCache = {};
             this.fromService = function (options) {
-                _this.fire(_this.bodyNativeElement, "FETCH_REQUEST", { options: options });
                 var deferred = _this.$q.defer();
                 _this.$http({ method: options.method, url: options.url, data: options.data, params: options.params, headers: options.headers }).then(function (results) {
-                    _this.fire(_this.bodyNativeElement, "FETCH_SUCCESS", { options: options, results: results });
                     deferred.resolve(results);
                 }).catch(function (error) {
-                    _this.fire(_this.bodyNativeElement, "FETCH_ERROR", { options: options, error: error });
                 });
                 return deferred.promise;
             };
@@ -515,7 +548,7 @@ var ngX;
         });
         return fetch;
     })();
-    angular.module("ngX").service("fetch", ["$http", "$q", "fire", "localStorageManager", fetch]);
+    angular.module("ngX").service("fetch", ["$http", "$q", "localStorageManager", fetch]);
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=fetch.js.map
@@ -869,6 +902,15 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=navigation.js.map
+
+var ngX;
+(function (ngX) {
+    function once() {
+    }
+    angular.module("ngX").service("once", [once]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=once.js.map
 
 var ngX;
 (function (ngX) {
@@ -1249,19 +1291,11 @@ var ngX;
 (function (ngX) {
     //http://victorsavkin.com/post/99998937651/building-angular-apps-using-flux-architecture
     var SecurityStore = (function () {
-        function SecurityStore($rootScope, dispatcher, localStorageManager) {
-            var _this = this;
-            this.$rootScope = $rootScope;
+        function SecurityStore(dispatcher, localStorageManager) {
             this.dispatcher = dispatcher;
             this.localStorageManager = localStorageManager;
             this.emitChange = function () {
             };
-            document.addEventListener("FETCH_SUCCESS", function (event) {
-                if (event.results && event.results.data.access_token) {
-                    _this.token = event.results.data.access_token;
-                    $rootScope.$broadcast("STORE_UPDATE", { store: _this });
-                }
-            });
         }
         Object.defineProperty(SecurityStore.prototype, "token", {
             get: function () {
@@ -1285,7 +1319,7 @@ var ngX;
         });
         return SecurityStore;
     })();
-    angular.module("ngX").service("securityStore", ["$rootScope", "dispatcher", "localStorageManager", SecurityStore])
+    angular.module("ngX").service("securityStore", ["dispatcher", "localStorageManager", SecurityStore])
         .run(["securityStore", function (securityStore) {
         }]);
 })(ngX || (ngX = {}));
@@ -1316,6 +1350,48 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=setOpacityAsync.js.map
+
+var ngX;
+(function (ngX) {
+    function store(dispatcher) {
+        var self = this;
+        self.dispatcher = dispatcher;
+        self.createInstance = function () { return new this(self.dispatcher); };
+        self.getById = function (id) {
+            var item = null;
+            for (var i = 0; i < self.items.length; i++) {
+                if (self.items[i].id === id) {
+                    item = self.items[i];
+                }
+            }
+            return item;
+        };
+        self.addOrUpdate = function (options) {
+            var exists = false;
+            for (var i = 0; i < self.items.length; i++) {
+                if (self.items[i].id === options.data.id) {
+                    exists = true;
+                    self.items[i] = options.data;
+                }
+            }
+            if (!exists)
+                self.items.push(options.data);
+        };
+        self.items = [];
+        self.emitChange = function (options) {
+            self.dispatcher.emit({
+                actionType: "CHANGE", options: {
+                    id: options ? options.id : null,
+                    data: options ? options.data : null
+                }
+            });
+        };
+        return self;
+    }
+    angular.module("ngX").service("store", ["dispatcher", store]);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=store.js.map
 
 var ngX;
 (function (ngX) {

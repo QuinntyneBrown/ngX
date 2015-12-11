@@ -3,13 +3,8 @@
     //http://victorsavkin.com/post/99998937651/building-angular-apps-using-flux-architecture
     class SecurityStore {
 
-        constructor(private $rootScope, private dispatcher, private localStorageManager: any) {
-            document.addEventListener("FETCH_SUCCESS", (event:any) => {
-                if (event.results && event.results.data.access_token) {
-                    this.token = event.results.data.access_token;
-                    $rootScope.$broadcast("STORE_UPDATE", { store: this });
-                }
-            });           
+        constructor(private dispatcher, private localStorageManager: any) {
+      
         }
 
         
@@ -34,7 +29,7 @@
         }
     }
 
-    angular.module("ngX").service("securityStore", ["$rootScope","dispatcher","localStorageManager", SecurityStore])
+    angular.module("ngX").service("securityStore", ["dispatcher","localStorageManager", SecurityStore])
         .run(["securityStore", (securityStore) => {
 
         }]);

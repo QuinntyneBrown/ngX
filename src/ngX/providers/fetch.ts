@@ -6,18 +6,16 @@
      */
     class fetch {
 
-        constructor(private $http: ng.IHttpService, private $q: ng.IQService, private fire: Function, private localStorageManager) { }
+        constructor(private $http: ng.IHttpService, private $q: ng.IQService, private localStorageManager) { }
         
         public inMemoryCache: any = {};
 
         public fromService = (options: any) => {
-            this.fire(this.bodyNativeElement, "FETCH_REQUEST", { options: options });
             var deferred = this.$q.defer();
-            this.$http({ method: options.method, url: options.url, data: options.data, params: options.params, headers: options.headers }).then((results) => {
-                this.fire(this.bodyNativeElement, "FETCH_SUCCESS", { options: options, results: results });
+            this.$http({ method: options.method, url: options.url, data: options.data, params: options.params, headers: options.headers }).then((results) => {                
                 deferred.resolve(results);
             }).catch((error) => {
-                this.fire(this.bodyNativeElement, "FETCH_ERROR", { options: options, error: error });
+                
             });
             return deferred.promise;
         }
@@ -44,5 +42,5 @@
 
     }
 
-    angular.module("ngX").service("fetch", ["$http", "$q","fire","localStorageManager", fetch]);
+    angular.module("ngX").service("fetch", ["$http", "$q","localStorageManager", fetch]);
 } 
