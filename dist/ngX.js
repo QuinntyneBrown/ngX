@@ -277,13 +277,13 @@ var ngX;
                 .controller(options.componentName || ngX.getFunctionName(options.component), options.component);
             try {
                 angular.module("ngRoute");
-                if (options.template) {
+                if (options.template || options.templateUrl) {
                     angular.module(options.module).config(["$routeProvider", function ($routeProvider) {
                             var length = ngX.routeConfigs.length;
                             for (var i = 0; i < length; i++) {
                                 var componentName = options.componentName || ngX.getFunctionName(options.component);
                                 if (ngX.routeConfigs[i].config.componentName && ngX.routeConfigs[i].config.componentName === componentName) {
-                                    ngX.routeConfigs[i].config.templateUrl = null;
+                                    ngX.routeConfigs[i].config.templateUrl = options.templateUrl;
                                     ngX.routeConfigs[i].config.template = options.template;
                                     $routeProvider.when(ngX.routeConfigs[i].when, ngX.routeConfigs[i].config);
                                 }
@@ -1353,42 +1353,44 @@ var ngX;
 
 var ngX;
 (function (ngX) {
-    function store(dispatcher) {
-        var self = this;
-        self.dispatcher = dispatcher;
-        self.createInstance = function () { return new this(self.dispatcher); };
-        self.getById = function (id) {
-            var item = null;
-            for (var i = 0; i < self.items.length; i++) {
-                if (self.items[i].id === id) {
-                    item = self.items[i];
+    var Store = (function () {
+        function Store(dispatcher) {
+            var _this = this;
+            this.dispatcher = dispatcher;
+            this.items = [];
+            this.getById = function (id) {
+                var item = null;
+                for (var i = 0; i < _this.items.length; i++) {
+                    if (_this.items[i].id === id) {
+                        item = _this.items[i];
+                    }
                 }
-            }
-            return item;
-        };
-        self.addOrUpdate = function (options) {
-            var exists = false;
-            for (var i = 0; i < self.items.length; i++) {
-                if (self.items[i].id === options.data.id) {
-                    exists = true;
-                    self.items[i] = options.data;
+                return item;
+            };
+            this.addOrUpdate = function (options) {
+                var exists = false;
+                for (var i = 0; i < this.items.length; i++) {
+                    if (this.items[i].id === options.data.id) {
+                        exists = true;
+                        this.items[i] = options.data;
+                    }
                 }
-            }
-            if (!exists)
-                self.items.push(options.data);
-        };
-        self.items = [];
-        self.emitChange = function (options) {
-            self.dispatcher.emit({
-                actionType: "CHANGE", options: {
-                    id: options ? options.id : null,
-                    data: options ? options.data : null
-                }
-            });
-        };
-        return self;
-    }
-    angular.module("ngX").service("store", ["dispatcher", store]);
+                if (!exists)
+                    this.items.push(options.data);
+            };
+            this.emitChange = function (options) {
+                this.dispatcher.emit({
+                    actionType: "CHANGE", options: {
+                        id: options ? options.id : null,
+                        data: options ? options.data : null
+                    }
+                });
+            };
+        }
+        Store.prototype.createInstance = function () { return new Store(this.dispatcher); };
+        return Store;
+    })();
+    angular.module("ngX").service("store", ["dispatcher", Store]);
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=store.js.map

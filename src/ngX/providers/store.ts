@@ -1,48 +1,46 @@
 ﻿module ngX {
 
-    function store(dispatcher) {
+    class Store {
+        
+        constructor(private dispatcher) { }
 
-        var self = this;
-        self.dispatcher = dispatcher;
+        items = [];
 
-        self.createInstance = function () { return new this(self.dispatcher); }
+        createInstance() {  return new Store(this.dispatcher); }
 
-        self.getById = function (id) {
+        getById = id => {
             var item = null;
-            for (var i = 0; i < self.items.length; i++) {
-                if (self.items[i].id === id) {
-                    item = self.items[i];
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].id === id) {
+                    item = this.items[i];
                 }
             }
             return item;
         }
 
-        self.addOrUpdate = function (options) {
+        addOrUpdate = function (options) {
             var exists = false;
-            for (var i = 0; i < self.items.length; i++) {
-                if (self.items[i].id === options.data.id) {
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].id === options.data.id) {
                     exists = true;
-                    self.items[i] = options.data;
+                    this.items[i] = options.data;
                 }
             }
             if (!exists)
-                self.items.push(options.data);
+                this.items.push(options.data);
         }
-
-        self.items = [];
-
-        self.emitChange = function (options) {
-            self.dispatcher.emit({
+        
+        emitChange = function (options) {
+            this.dispatcher.emit({
                 actionType: "CHANGE", options: {
                     id: options ? options.id : null,
                     data: options ? options.data : null
                 }
             });
         }
-
-        return self;
+        
     }
 
-    angular.module("ngX").service("store", ["dispatcher", store]);
+    angular.module("ngX").service("store", ["dispatcher", Store]);
 
 }
