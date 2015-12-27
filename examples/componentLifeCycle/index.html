@@ -30,6 +30,9 @@
             return {
                 title: routeData.home.title,
                 onInit: function () { console.log("onInit"); },
+                onResize: function() {
+                    alert("resize");
+                },
                 canDeactivate: function () {
                     console.log("canDeactivate");
                     return $q.when(true);

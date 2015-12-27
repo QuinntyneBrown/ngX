@@ -1227,6 +1227,7 @@ var ngX;
             }])
             .run(["$injector", "$location", "$rootScope", "$route", "loginRedirect", "fire", "securityStore", function ($injector, $location, $rootScope, $route, loginRedirect, fire, securityStore) {
                 $rootScope.$on("$viewContentLoaded", function () {
+                    var debounce = $injector.get("debounce");
                     var $route = $injector.get("$route");
                     var instance = $route.current.scope[$route.current.controllerAs];
                     if (instance.onInit)
@@ -1237,9 +1238,16 @@ var ngX;
                             action: event.action
                         });
                     };
+                    window.addEventListener("resize", onResize);
+                    function onResize() {
+                        if (instance && instance.onResize) {
+                            instance.onResize();
+                        }
+                    }
                     document.addEventListener("modelUpdate", instance.onChildUpdated);
                     $route.current.scope.$on("$destroy", function () {
                         document.removeEventListener("modelUpdate", instance.onChildrenUpdated);
+                        window.removeEventListener("resize", onResize);
                     });
                 });
                 $rootScope.$on("$routeChangeStart", function (currentRoute, nextRoute) {

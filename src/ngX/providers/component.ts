@@ -208,9 +208,7 @@
 
             angular.module(options.module)
                 .controller(options.componentName || getFunctionName(options.component), options.component);
-
-
-
+            
             try {
                 angular.module("ngRoute");
 

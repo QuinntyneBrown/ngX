@@ -58,3 +58,4 @@ ngX.Component({
     providers: ["$element", "$scope"],
     template: ["<h1>{{::vm.anotherGreeting}}</h1>"].join(" ")
 });
+//# sourceMappingURL=index.js.map

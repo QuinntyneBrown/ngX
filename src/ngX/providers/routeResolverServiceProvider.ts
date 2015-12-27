@@ -186,6 +186,7 @@ module ngX {
                 fire: any, 
                 securityStore: any) => {
                 $rootScope.$on("$viewContentLoaded", () => {
+                    var debounce: Function = <any>$injector.get("debounce");
                     var $route: any = $injector.get("$route");
                     var instance = $route.current.scope[$route.current.controllerAs];
                     if (instance.onInit) instance.onInit();
@@ -197,10 +198,19 @@ module ngX {
                         });
                     }
 
+                    window.addEventListener("resize", onResize);
+
+                    function onResize () {
+                        if (instance && instance.onResize) {
+                            instance.onResize()
+                        }
+                    }
+
                     document.addEventListener("modelUpdate", instance.onChildUpdated);
 
                     $route.current.scope.$on("$destroy", () => {
                         document.removeEventListener("modelUpdate", instance.onChildrenUpdated);
+                        window.removeEventListener("resize", onResize);
                     });
                 });
 
