@@ -87,24 +87,22 @@
                             if (!componentStyles[options.selector]) {
                                 componentStyles[options.selector] = true;
 
+                                function addStyleTagToHead() {
+                                    var style = document.createElement("style");
+                                    style.appendChild(document.createTextNode(styles));
+                                    document.head.appendChild(style);
+                                }
+
                                 if (document.readyState === "complete") {
                                     addStyleTagToHead();
                                 }
                                 else {
-                                    window.addEventListener("DOMContentLoaded", onDocumentLoad);
                                     function onDocumentLoad() {
                                         addStyleTagToHead();
                                         window.removeEventListener("DOMContentLoaded", onDocumentLoad);
                                     }
-                                }
-
-                                function addStyleTagToHead() {
-                                    var head = document.getElementsByTagName("head");
-                                    var augmentedJQuery = angular.element("<style>" + styles + "</style>");
-                                    head[0].appendChild(augmentedJQuery[0]);
-                                }
-
-
+                                    window.addEventListener("DOMContentLoaded", onDocumentLoad);
+                                }                                
                             }
                         },
                         post: function (scope: any) {
