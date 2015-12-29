@@ -89,11 +89,12 @@
 
                                 function addStyleTagToHead() {
                                     var style = document.createElement("style");
+                                    style.setAttribute("data-selector", options.selector)
                                     style.appendChild(document.createTextNode(styles));
                                     document.head.appendChild(style);
                                 }
 
-                                if (document.readyState === "complete") {
+                                if (document.readyState === "complete" || document.readyState === 'interactive') {
                                     addStyleTagToHead();
                                 }
                                 else {
