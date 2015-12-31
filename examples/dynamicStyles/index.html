@@ -21,14 +21,17 @@
             ngX.Component({
                 selector: "greeting",
                 styles : [
-                "h1.greeting { font-weight: 100; }"
-                ].join(" "),
+                "h1.greeting { ",
+                " font-weight: 800; ",
+                " color: red; ",
+                "} "
+                ],
                 component: GreetingComponent,
                 template: [
                     "<h1 class='greeting'>",
                     "{{ ::vm.greeting }}",
                     "</h1>"
-                ].join(" ")
+                ]
             });
 
         </script>

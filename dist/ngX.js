@@ -181,6 +181,7 @@ var ngX;
             }
             if ((options.component && options.component.styles) || options.styles) {
                 var styles = options.styles ? options.styles : options.component.styles;
+                styles = angular.isArray(styles) ? styles.join(" \n ") : styles;
                 directiveDefinitionObject.compile = function () {
                     return {
                         pre: function (scope, element, attributes, controller, transcludeFn) {
