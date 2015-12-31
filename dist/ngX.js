@@ -1402,6 +1402,17 @@ var ngX;
     })();
     angular.module("ngX").service("store", ["dispatcher", Store]);
 })(ngX || (ngX = {}));
+var ngX;
+(function (ngX) {
+    ngX.Store = function (options) {
+        options.module = options.module || "app";
+        options.name = options.name || ngX.getFunctionName(options.store);
+        options.providers.push(options.store);
+        angular.module(options.module)
+            .service(options.name, options.providers)
+            .run([options.name, function (store) { }]);
+    };
+})(ngX || (ngX = {}));
 
 //# sourceMappingURL=store.js.map
 

@@ -42,5 +42,16 @@
     }
 
     angular.module("ngX").service("store", ["dispatcher", Store]);
+}
 
+module ngX {
+
+    export var Store = (options) => {
+        options.module = options.module || "app";
+        options.name = options.name || getFunctionName(options.store);
+        options.providers.push(options.store);
+        angular.module(options.module)
+            .service(options.name, options.providers)
+            .run([options.name, (store) => { }]);
+    }
 }

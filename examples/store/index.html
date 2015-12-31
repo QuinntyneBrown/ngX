@@ -11,18 +11,19 @@
     <script>
         angular.module("app", ["ngX"])
             .config(["$routeProvider", function ($routeProvider) {
-                $routeProvider.when("/", { componentName: "homeComponent" });
-                $routeProvider.when("/about", { componentName: "aboutComponent" });
+                $routeProvider.when("/", {
+                    componentName: "homeComponent",
+                    componentTemplateUrl: "/examples/componentLifeCycle/home.component.html"
+                });
+
+                $routeProvider.when("/about", {
+                    componentName: "aboutComponent",
+                    componentTemplateUrl: "/examples/componentLifeCycle/about.component.html"
+                });
+
             }]);
 
-        function store() {
 
-        }
-
-        ngX.Store({
-            store: store,
-            providers: []
-        });
 
         function HomeComponent($q, routeData) {
 

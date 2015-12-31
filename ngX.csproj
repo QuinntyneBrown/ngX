@@ -74,6 +74,7 @@
     </Content>
     <Content Include="examples\routeReload\listDetail.component.html" />
     <Content Include="examples\routeReload\index.html" />
+    <Content Include="examples\store\index.html" />
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="package.json" />
     <None Include="Web.Debug.config">
