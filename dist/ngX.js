@@ -148,7 +148,7 @@ var ngX;
                 options.transclude = "element";
             var directiveDefinitionObject = {
                 restrict: options.restrict || "E",
-                template: options.template,
+                template: angular.isArray(options.template) ? options.template.join(" \n ") : options.template,
                 templateUrl: options.templateUrl,
                 replace: options.replace || true,
                 scope: options.scope || {},
@@ -285,7 +285,7 @@ var ngX;
                                 var componentName = options.componentName || ngX.getFunctionName(options.component);
                                 if (ngX.routeConfigs[i].config.componentName && ngX.routeConfigs[i].config.componentName === componentName) {
                                     ngX.routeConfigs[i].config.templateUrl = options.templateUrl;
-                                    ngX.routeConfigs[i].config.template = options.template;
+                                    ngX.routeConfigs[i].config.template = angular.isArray(options.template) ? options.template.join(" \n ") : options.template;
                                     $routeProvider.when(ngX.routeConfigs[i].when, ngX.routeConfigs[i].config);
                                 }
                             }

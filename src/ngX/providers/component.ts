@@ -38,7 +38,7 @@
 
             var directiveDefinitionObject: any = {
                 restrict: options.restrict || "E",
-                template: options.template,
+                template: angular.isArray(options.template) ? options.template.join(" \n ") : options.template,
                 templateUrl: options.templateUrl,
                 replace: options.replace || true,
                 scope: options.scope || {},
@@ -220,7 +220,7 @@
 
                             if (ngX.routeConfigs[i].config.componentName && ngX.routeConfigs[i].config.componentName === componentName) {
                                 routeConfigs[i].config.templateUrl = options.templateUrl;
-                                routeConfigs[i].config.template = options.template;
+                                routeConfigs[i].config.template = angular.isArray(options.template) ? options.template.join(" \n ") : options.template;
                                 $routeProvider.when(routeConfigs[i].when, routeConfigs[i].config);
                             }
                         }
