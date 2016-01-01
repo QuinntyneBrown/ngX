@@ -811,7 +811,7 @@ var ngX;
         }
         ;
         var deferred = $q.defer();
-        var actionId = options.action();
+        var actionId = options.params ? options.action(options.params) : options.action();
         var listenerId = dispatcher.addListener({
             actionType: "CHANGE",
             callback: function (callbackOptions) {
