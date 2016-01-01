@@ -40,6 +40,15 @@
             }
         }
 
+        ngX.ConfigureRoutePromise(function ($q) {
+            var deferred = $q.defer();
+
+            console.log("route promise");
+
+            deferred.resolve();
+            return deferred.promise;
+        });
+
         /* static */
         HomeComponent.canActivate = function () {
             return ["$q", function ($q) {

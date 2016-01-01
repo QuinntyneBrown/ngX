@@ -330,6 +330,30 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    ngX.ConfigureRoutePromise = function (options) {
+        if (angular.isFunction(options))
+            options = { promise: options };
+        var app = angular.module(options.module || "app");
+        var promiseDefinition = options.providers ? options.providers : ngX.getParameterNames(options.promise);
+        promiseDefinition.push(options.promise);
+        app.config([
+            "routeResolverServiceProvider", function (routeResolverServiceProvider) {
+                routeResolverServiceProvider.configure({
+                    priority: options.promise.priority || '0',
+                    promise: promiseDefinition,
+                    route: options.route,
+                    routes: options.routes,
+                    excludedRoutes: options.excludedRoutes
+                });
+            }
+        ]);
+    };
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=configureRoutePromise.js.map
+
+var ngX;
+(function (ngX) {
     var CurrentUser = (function () {
         function CurrentUser() {
         }
@@ -705,6 +729,22 @@ var ngX;
 })(ngX || (ngX = {}));
 
 //# sourceMappingURL=getHtml.js.map
+
+//http://stackoverflow.com/questions/1007981/how-to-get-function-parameter-names-values-dynamically-from-javascript
+var ngX;
+(function (ngX) {
+    var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+    var ARGUMENT_NAMES = /([^\s,]+)/g;
+    ngX.getParameterNames = function (func) {
+        var fnStr = func.toString().replace(STRIP_COMMENTS, '');
+        var result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+        if (result === null)
+            result = [];
+        return result;
+    };
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=getParameterNames.js.map
 
 var ngX;
 (function (ngX) {
