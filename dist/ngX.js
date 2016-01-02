@@ -1484,7 +1484,15 @@ var ngX;
         options.providers.push(options.store);
         angular.module(options.module)
             .service(options.name, options.providers)
-            .run([options.name, function (store) { }]);
+            .run([options.name, "dispatcher", "store", function (store, dispatcher, baseStore) {
+                store.emitChange = function (options) {
+                    dispatcher.emit({ actionType: "CHANGE", options: { id: options.id } });
+                };
+                store.storeInstance = baseStore.createInstance();
+                Object.defineProperty(store, "items", {
+                    "get": function () { return store.storeInstance.items; }
+                });
+            }]);
     };
 })(ngX || (ngX = {}));
 
