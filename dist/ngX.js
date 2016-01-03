@@ -312,6 +312,36 @@ var ngX;
                             });
                         }
                     ]);
+                if (options.styles) {
+                    angular.module("ngX").run(["$rootScope", function ($rootScope) {
+                            var styles = options.styles ? options.styles : options.component.styles;
+                            styles = angular.isArray(styles) ? styles.join(" \n ") : styles;
+                            var key = options.route;
+                            $rootScope.$on("$routeChangeStart", function (currentRoute, nextRoute) {
+                                if (nextRoute.$$route.originalPath == options.route) {
+                                    if (!ngX.componentStyles[key]) {
+                                        ngX.componentStyles[key] = true;
+                                        function addStyleTagToHead() {
+                                            var style = document.createElement("style");
+                                            style.setAttribute("data-selector", key);
+                                            style.appendChild(document.createTextNode(styles));
+                                            document.head.appendChild(style);
+                                        }
+                                        if (document.readyState === "complete" || document.readyState === 'interactive') {
+                                            addStyleTagToHead();
+                                        }
+                                        else {
+                                            function onDocumentLoad() {
+                                                addStyleTagToHead();
+                                                window.removeEventListener("DOMContentLoaded", onDocumentLoad);
+                                            }
+                                            window.addEventListener("DOMContentLoaded", onDocumentLoad);
+                                        }
+                                    }
+                                }
+                            });
+                        }]);
+                }
             }
             catch (error) {
             }
@@ -632,7 +662,7 @@ var ngX;
                         actionType: "CHANGE",
                         callback: instance.storeOnChange
                     });
-                    instance.$on("$destroy", function () {
+                    $route.current.scope.$on("$destroy", function () {
                         dispatcher.removeListener({ id: listenerId });
                     });
                 }

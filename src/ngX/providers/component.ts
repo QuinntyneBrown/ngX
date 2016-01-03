@@ -250,6 +250,40 @@
                                 });
                             }
                         ]);
+
+                if (options.styles) {
+                    angular.module("ngX").run(["$rootScope", ($rootScope) => {
+                        var styles = options.styles ? options.styles : options.component.styles;
+                        styles = angular.isArray(styles) ? styles.join(" \n ") : styles;
+                        var key = options.route;                        
+                        $rootScope.$on("$routeChangeStart", function (currentRoute, nextRoute) {
+                            if (nextRoute.$$route.originalPath == options.route) {
+                                if (!componentStyles[key]) {
+                                    componentStyles[key] = true;
+
+                                    function addStyleTagToHead() {
+                                        var style = document.createElement("style");
+                                        style.setAttribute("data-selector", key)
+                                        style.appendChild(document.createTextNode(styles));
+                                        document.head.appendChild(style);
+                                    }
+
+                                    if (document.readyState === "complete" || document.readyState === 'interactive') {
+                                        addStyleTagToHead();
+                                    }
+                                    else {
+                                        function onDocumentLoad() {
+                                            addStyleTagToHead();
+                                            window.removeEventListener("DOMContentLoaded", onDocumentLoad);
+                                        }
+                                        window.addEventListener("DOMContentLoaded", onDocumentLoad);
+                                    }
+                                }
+                            }                   
+                        });
+                    }]);
+
+                }
             } catch (error) {
 
             }

@@ -9,13 +9,11 @@
                 actionType: "CHANGE",
                 callback: instance.storeOnChange
             });            
-            instance.$on("$destroy", () => {
+            $route.current.scope.$on("$destroy", () => {
                 dispatcher.removeListener({ id: listenerId });
             });                
         }
-        });
-
-
+        });        
     }]);
 
 }
