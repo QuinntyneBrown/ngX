@@ -212,6 +212,7 @@ var ngX;
                             var $injector = angular.element(document.getElementsByTagName("body")[0]).injector();
                             var debounce = $injector.get("debounce");
                             var securityStore = $injector.get("securityStore");
+                            var dispatcher = $injector.get("dispatcher");
                             if (scope && scope.vm) {
                                 scope.vm.currentUser = securityStore.currentUser;
                             }
@@ -239,8 +240,15 @@ var ngX;
                                 if (scope.vm && scope.vm.onRouteUpdate)
                                     scope.vm.onRouteUpdate();
                             });
-                            if (scope.vm && scope.vm.onStoreUpdate)
-                                scope.$on("STORE_UPDATE", scope.vm.onStoreUpdate);
+                            if (scope.vm && scope.vm.storeOnChange) {
+                                var listenerId = dispatcher.addListener({
+                                    actionType: "CHANGE",
+                                    callback: scope.vm.storeOnChange
+                                });
+                                scope.$on("$destroy", function () {
+                                    dispatcher.removeListener({ id: listenerId });
+                                });
+                            }
                             if (scope.vm && scope.vm.onKeyDown) {
                                 document.addEventListener("keydown", scope.vm.onKeyDown);
                                 scope.$on("$destroy", function () {
@@ -615,12 +623,18 @@ var ngX;
 
 var ngX;
 (function (ngX) {
-    angular.module("ngX").run(["$injector", "$rootScope", function ($injector, $rootScope) {
+    angular.module("ngX").run(["$injector", "$rootScope", "dispatcher", function ($injector, $rootScope, dispatcher) {
             $rootScope.$on("$viewContentLoaded", function () {
                 var $route = $injector.get("$route");
                 var instance = $route.current.scope[$route.current.controllerAs];
-                if (instance && instance.onStoreUpdate) {
-                    $route.current.scope.$on("STORE_UPDATE", instance.onStoreUpdate);
+                if (instance && instance.storeOnChange) {
+                    var listenerId = dispatcher.addListener({
+                        actionType: "CHANGE",
+                        callback: instance.storeOnChange
+                    });
+                    instance.$on("$destroy", function () {
+                        dispatcher.removeListener({ id: listenerId });
+                    });
                 }
             });
         }]);
@@ -1492,6 +1506,9 @@ var ngX;
                 Object.defineProperty(store, "items", {
                     "get": function () { return store.storeInstance.items; }
                 });
+                store.getById = function (id) { return store.storeInstance.getById(id); };
+                if (store.connection)
+                    store.connection.start({ transport: 'longPolling' }, function () { });
             }]);
     };
 })(ngX || (ngX = {}));

@@ -1,6 +1,6 @@
 {
     "name": "ng-x",
-    "version": "0.4.00",
+    "version": "0.4.03",
     "description": "Extensions for Angular 1.x to ease transitions to Angular 2 and remove boiler plate to writing Angular 1.x code.",
     "main": "index.ts",
     "scripts": {

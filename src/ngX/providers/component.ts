@@ -114,6 +114,7 @@
 
                             var debounce: Function = <any>$injector.get("debounce");
                             var securityStore: any = <any>$injector.get("securityStore");
+                            var dispatcher: any = <any>$injector.get("dispatcher");
 
                             if (scope && scope.vm) {
                                 scope.vm.currentUser = securityStore.currentUser;
@@ -154,8 +155,16 @@
                                     scope.vm.onRouteUpdate();
                             });
 
-                            if (scope.vm && scope.vm.onStoreUpdate)
-                                scope.$on("STORE_UPDATE", scope.vm.onStoreUpdate);
+                            if (scope.vm && scope.vm.storeOnChange) {
+                                var listenerId = dispatcher.addListener({
+                                    actionType: "CHANGE",
+                                    callback: scope.vm.storeOnChange
+                                });
+                                scope.$on("$destroy", () => {
+                                    dispatcher.removeListener({ id: listenerId });
+                                });   
+                            }
+                                
                             
 
                             if (scope.vm && scope.vm.onKeyDown) {

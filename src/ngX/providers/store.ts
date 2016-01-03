@@ -60,6 +60,12 @@ module ngX {
                 Object.defineProperty(store, "items", {
                     "get": function () { return store.storeInstance.items; }
                 });
+
+                store.getById = function (id) { return store.storeInstance.getById(id); }
+
+                if (store.connection)
+                    store.connection.start({ transport: 'longPolling' }, function () { });
+
             }]);
     }
 }
