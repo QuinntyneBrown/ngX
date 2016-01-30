@@ -66,6 +66,9 @@ module ngX {
                 if (store.connection)
                     store.connection.start({ transport: 'longPolling' }, function () { });
 
+                if (store.registerListeners)
+                    store.registerListeners();
+
             }]);
     }
 }

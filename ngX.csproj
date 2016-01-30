@@ -92,6 +92,7 @@
     <Content Include="gulpfile.config.js" />
     <Content Include="gulpfile.js" />
     <Content Include="karma.conf.js" />
+    <TypeScriptCompile Include="src\ngX\providers\addOrUpdate.ts" />
     <TypeScriptCompile Include="src\ngX\providers\appendToBodyAsync.ts" />
     <TypeScriptCompile Include="src\ngX\providers\authorizationInterceptor.ts" />
     <TypeScriptCompile Include="src\ngX\providers\configureRoutePromise.ts" />
@@ -103,6 +104,7 @@
     <TypeScriptCompile Include="src\ngX\providers\flux.ts" />
     <TypeScriptCompile Include="src\ngX\providers\formEncode.ts" />
     <TypeScriptCompile Include="src\ngX\providers\getParameterNames.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\invokeAsync.ts" />
     <TypeScriptCompile Include="src\ngX\providers\localStorageManager.ts" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -137,10 +139,13 @@
     <TypeScriptCompile Include="src\ngX\providers\model.ts" />
     <TypeScriptCompile Include="src\ngX\providers\navigation.ts" />
     <TypeScriptCompile Include="src\ngX\providers\once.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\pluck.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\pluckOut.ts" />
     <TypeScriptCompile Include="src\ngX\providers\removeElement.ts" />
     <TypeScriptCompile Include="src\ngX\providers\renderedNodes.ts" />
     <TypeScriptCompile Include="src\ngX\providers\requestCount.ts" />
     <TypeScriptCompile Include="src\ngX\providers\routeResolverServiceProvider.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\safeDigest.ts" />
     <TypeScriptCompile Include="src\ngX\providers\securityStore.ts" />
     <TypeScriptCompile Include="src\ngX\providers\setOpacityAsync.ts" />
     <TypeScriptCompile Include="src\ngX\providers\store.ts" />

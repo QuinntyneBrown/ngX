@@ -15,6 +15,25 @@ catch (error) {
 
 var ngX;
 (function (ngX) {
+    var addOrUpdate = function (options) {
+        var exists = false;
+        for (var i = 0; i < options.items.length; i++) {
+            if (options.items[i].id === options.item.id) {
+                options.items[i] = options.item;
+                exists = true;
+            }
+        }
+        if (!exists) {
+            options.items.push(options.item);
+        }
+    };
+    angular.module("ngX").value("addOrUpdate", addOrUpdate);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=addOrUpdate.js.map
+
+var ngX;
+(function (ngX) {
     "use strict";
     /**
      * @name ApiEndpointProvider
@@ -1034,6 +1053,37 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    ngX.pluck = function (options) {
+        var result = null;
+        for (var i = 0; i < options.items.length; i++) {
+            if (options.value == options.items[i][options.key || "id"]) {
+                result = options.items[i];
+            }
+        }
+        return result;
+    };
+    angular.module("ngX").value("pluck", ngX.pluck);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=pluck.js.map
+
+var ngX;
+(function (ngX) {
+    var pluckOut = function (options) {
+        for (var i = 0; i < options.items.length; i++) {
+            if (options.value == options.items[i][options.key || "id"]) {
+                options.items.splice(i, 1);
+            }
+        }
+        return options.items;
+    };
+    angular.module("ngX").value("pluckOut", pluckOut);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=pluckOut.js.map
+
+var ngX;
+(function (ngX) {
     "use strict";
     /**
      * @name removeElement
@@ -1417,6 +1467,17 @@ var ngX;
 
 var ngX;
 (function (ngX) {
+    function safeDigest(scope) {
+        if (!scope.$$phase && (scope.$root && !scope.$root.$$phase))
+            scope.$digest();
+    }
+    angular.module("ngX").value("safeDigest", safeDigest);
+})(ngX || (ngX = {}));
+
+//# sourceMappingURL=safeDigest.js.map
+
+var ngX;
+(function (ngX) {
     //http://victorsavkin.com/post/99998937651/building-angular-apps-using-flux-architecture
     var SecurityStore = (function () {
         function SecurityStore(dispatcher, localStorageManager) {
@@ -1539,6 +1600,8 @@ var ngX;
                 store.getById = function (id) { return store.storeInstance.getById(id); };
                 if (store.connection)
                     store.connection.start({ transport: 'longPolling' }, function () { });
+                if (store.registerListeners)
+                    store.registerListeners();
             }]);
     };
 })(ngX || (ngX = {}));
