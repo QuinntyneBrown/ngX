@@ -26,17 +26,12 @@
 
 module fluxApp {
 
-    export class AddAction {
-        constructor(public value) {
-
-        }
-    }
+    export class AddAction { constructor(public value) { } }
 
     export class ActionCreator {
         constructor(private dispatcher) { }
-        add = () => {
-            this.dispatcher.dispatch(new AddAction(1));
-        }
+
+        add = () => this.dispatcher.dispatch(new AddAction(1));
     }
 
     angular.module("fluxApp").service("actionCreator", ["dispatcher", ActionCreator]);
@@ -45,9 +40,14 @@ module fluxApp {
 
 
     export class HomeComponent {
+        
         public get greeting() { return "ngX"; }
 
-        storeOnChange = state => console.log(JSON.stringify(state));
+        storeOnChange = state => this.state = state;
+  
+        state: any = {
+            value:0
+        };
     }
 
     export class AnotherComponent {

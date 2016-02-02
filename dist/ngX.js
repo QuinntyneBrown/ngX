@@ -43160,8 +43160,14 @@ var ngX;
                                 if (scope.vm && scope.vm.onRouteUpdate)
                                     scope.vm.onRouteUpdate();
                             });
-                            if (scope.vm && scope.vm.storeOnChange)
-                                store.subscribe(scope.vm.storeOnChange);
+                            if (scope.vm && scope.vm.storeOnChange) {
+                            }
+                            store.subscribe(function (state) {
+                                if (state) {
+                                    scope.vm.storeOnChange(state);
+                                    scope.$digest();
+                                }
+                            });
                             if (scope.vm && scope.vm.onKeyDown) {
                                 document.addEventListener("keydown", scope.vm.onKeyDown);
                                 scope.$on("$destroy", function () {
@@ -43516,9 +43522,15 @@ var ngX;
     angular.module("ngX").run(["$injector", "$rootScope", "store", function ($injector, $rootScope, store) {
             $rootScope.$on("$viewContentLoaded", function () {
                 var $route = $injector.get("$route");
-                var instance = $route.current.scope[$route.current.controllerAs];
+                var scope = $route.current.scope;
+                var instance = scope[$route.current.controllerAs];
                 if (instance && instance.storeOnChange)
-                    store.subscribe(instance.storeOnChange);
+                    store.subscribe(function (state) {
+                        if (state) {
+                            instance.storeOnChange(state);
+                            scope.$digest();
+                        }
+                    });
             });
         }]);
 })(ngX || (ngX = {}));

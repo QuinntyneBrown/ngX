@@ -34,9 +34,7 @@ var fluxApp;
         function ActionCreator(dispatcher) {
             var _this = this;
             this.dispatcher = dispatcher;
-            this.add = function () {
-                _this.dispatcher.dispatch(new AddAction(1));
-            };
+            this.add = function () { return _this.dispatcher.dispatch(new AddAction(1)); };
         }
         return ActionCreator;
     })();
@@ -44,7 +42,11 @@ var fluxApp;
     angular.module("fluxApp").service("actionCreator", ["dispatcher", ActionCreator]);
     var HomeComponent = (function () {
         function HomeComponent() {
-            this.storeOnChange = function (state) { return console.log(JSON.stringify(state)); };
+            var _this = this;
+            this.storeOnChange = function (state) { return _this.state = state; };
+            this.state = {
+                value: 0
+            };
         }
         Object.defineProperty(HomeComponent.prototype, "greeting", {
             get: function () { return "ngX"; },

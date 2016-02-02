@@ -155,8 +155,15 @@
                                     scope.vm.onRouteUpdate();
                             });
 
-                            if (scope.vm && scope.vm.storeOnChange)
-                                store.subscribe(scope.vm.storeOnChange);                                  
+                            if (scope.vm && scope.vm.storeOnChange) {
+
+                            }
+                            store.subscribe(state => {
+                                if (state) {
+                                    scope.vm.storeOnChange(state);
+                                    scope.$digest();
+                                }
+                            });                                  
                             
                                 
                             

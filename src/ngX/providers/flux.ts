@@ -3,10 +3,16 @@
     angular.module("ngX").run(["$injector", "$rootScope", "store", ($injector, $rootScope, store) => {
         $rootScope.$on("$viewContentLoaded", () => {            
         var $route: any = $injector.get("$route");
-        var instance = $route.current.scope[$route.current.controllerAs];
+        var scope = $route.current.scope;
+        var instance = scope[$route.current.controllerAs];
         if (instance && instance.storeOnChange) 
-            store.subscribe(instance.storeOnChange);                
-        
+            store.subscribe(state => {
+                if (state) {
+                    instance.storeOnChange(state);
+                    scope.$digest();
+                }
+            });        
+
         });        
     }]);
 
