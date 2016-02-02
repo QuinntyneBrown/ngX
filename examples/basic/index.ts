@@ -18,6 +18,10 @@
 
 class HomeComponent {    
     public get greeting() { return "ngX"; }
+
+    storeOnChange = () => {
+
+    }
 }
 
 ngX.Component({

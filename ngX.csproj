@@ -64,17 +64,19 @@
     <Content Include="examples\es5\index.html" />
     <Content Include="examples\componentLifeCycle\index.html" />
     <Content Include="examples\dynamicStyles\index.html" />
+    <Content Include="examples\flux\home.component.html" />
+    <Content Include="examples\flux\index.html" />
     <Content Include="examples\hi\index.html" />
     <Content Include="examples\hi\quinntynebrown.jpg" />
     <Content Include="examples\localStorageManager\index.html" />
     <Content Include="examples\loginRedirect\index.html" />
     <Content Include="examples\polymerStyle\index.html" />
-    <Content Include="dist\ngX.min.js.map">
-      <DependentUpon>ngX.min.js</DependentUpon>
-    </Content>
     <Content Include="examples\routeReload\listDetail.component.html" />
     <Content Include="examples\routeReload\index.html" />
     <Content Include="examples\store\index.html" />
+    <Content Include="lib\angular-route.js" />
+    <Content Include="lib\angular.js" />
+    <Content Include="lib\rx.js" />
     <Content Include="node_modules\jquery\dist\jquery.js" />
     <Content Include="package.json" />
     <None Include="Web.Debug.config">
@@ -85,19 +87,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="dist\ngX.min.js" />
     <Content Include="examples\basic\home.component.html" />
     <Content Include="examples\basic\index.html" />
     <Content Include="examples\basic\index.js" />
     <Content Include="gulpfile.config.js" />
     <Content Include="gulpfile.js" />
     <Content Include="karma.conf.js" />
+    <TypeScriptCompile Include="examples\flux\fluxApp.ts" />
     <TypeScriptCompile Include="src\ngX\providers\addOrUpdate.ts" />
     <TypeScriptCompile Include="src\ngX\providers\appendToBodyAsync.ts" />
     <TypeScriptCompile Include="src\ngX\providers\authorizationInterceptor.ts" />
     <TypeScriptCompile Include="src\ngX\providers\configureRoutePromise.ts" />
     <TypeScriptCompile Include="src\ngX\providers\dispatcher.ts" />
-    <TypeScriptCompile Include="src\ngX\providers\eventEmitter.ts" />
     <TypeScriptCompile Include="src\ngX\providers\extendCssAsync.ts" />
     <TypeScriptCompile Include="src\ngX\providers\fetch.ts" />
     <TypeScriptCompile Include="src\ngX\providers\fetchCounter.ts" />
@@ -114,6 +115,7 @@
   <ItemGroup>
     <Folder Include="examples\authorizedRoute\" />
     <Folder Include="examples\navigation\" />
+    <Folder Include="node_modules\rxjs\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="examples\basic\index.ts" />
@@ -141,6 +143,7 @@
     <TypeScriptCompile Include="src\ngX\providers\once.ts" />
     <TypeScriptCompile Include="src\ngX\providers\pluck.ts" />
     <TypeScriptCompile Include="src\ngX\providers\pluckOut.ts" />
+    <TypeScriptCompile Include="src\ngX\providers\reducersProvider.ts" />
     <TypeScriptCompile Include="src\ngX\providers\removeElement.ts" />
     <TypeScriptCompile Include="src\ngX\providers\renderedNodes.ts" />
     <TypeScriptCompile Include="src\ngX\providers\requestCount.ts" />
@@ -154,6 +157,7 @@
     <TypeScriptCompile Include="typings\angularjs\angular-route.d.ts" />
     <TypeScriptCompile Include="typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="typings\rx\rx.d.ts" />
     <TypeScriptCompile Include="typings\tsd.d.ts" />
   </ItemGroup>
   <PropertyGroup>

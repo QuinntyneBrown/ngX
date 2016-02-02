@@ -14,6 +14,8 @@ angular.module("basicApp", ["ngX"])
     }]);
 var HomeComponent = (function () {
     function HomeComponent() {
+        this.storeOnChange = function () {
+        };
     }
     Object.defineProperty(HomeComponent.prototype, "greeting", {
         get: function () { return "ngX"; },
